@@ -1,4 +1,5 @@
 import pygame
+import sqlite3
 
 
 class Registration_User():
@@ -8,6 +9,8 @@ class Registration_User():
     def __init__(self, screen):
         self.screen = screen
         self.system_labels()
+        self.finally_name = None
+        self.finally_password = None
 
     def system_labels(self):
         self.text_login = self.font.render('Вход в аккаунт', True, (0, 0, 0))
@@ -23,12 +26,24 @@ class Registration_User():
     def input_name(self, message):
         self.text_name = self.font.render(message, True, [0, 0, 0])
         screen.blit(self.text_name, (165, 80))
-        finally_name = self.text_name  # for database
+        self.finally_name = message  # for database
 
     def input_password(self, password):
         self.text_password = self.font.render(password, True, [0, 0, 0])
         screen.blit(self.text_password, (160, 180))
-        finally_password = self.text_password  # for database
+        self.finally_password = password  # for database
+
+    def add_data(self):
+        self.connect = sqlite3.connect('battleship.db')
+        self.cursor = self.connect.cursor()
+        try:
+            self.result = self.cursor.execute(f'''INSERT INTO
+users(name, password, all_games, wins, lose)
+VALUES("{self.finally_name}", "{self.finally_password}", "0", "0", "0") ''')
+            self.connect.commit()
+        except sqlite3.IntegrityError:
+            pass
+        self.connect.close()
 
 
 if __name__ == '__main__':
@@ -64,6 +79,8 @@ if __name__ == '__main__':
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         need_input_name = False
+                        if input_password != '':
+                            register.add_data()
                     elif event.key == pygame.K_BACKSPACE:
                         pygame.draw.rect(screen, (225, 210, 225), (160, 80, 200, 30), 0)
                         input_name = input_name[:-1]
@@ -78,6 +95,8 @@ if __name__ == '__main__':
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         need_input_password = False
+                        if input_name != '':
+                            register.add_data()
                     elif event.key == pygame.K_BACKSPACE:
                         pygame.draw.rect(screen, (225, 210, 225), (160, 180, 200, 30), 0)
                         input_password = input_password[:-1]
