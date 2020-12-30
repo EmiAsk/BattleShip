@@ -22,7 +22,7 @@ class Button:
     pygame.init()
     button_sound = pygame.mixer.Sound('click_button.wav')
     font = pygame.font.Font('segoepr.ttf', 22)
-    def __init__(self, width, height):
+    def __init__(self, width=240, height=50):
         self.width = width
         self.heigth = height
         self.inactive_color = (100, 149, 237)
@@ -58,13 +58,31 @@ class Button:
 class Menu:
     pygame.font.init()
     font = pygame.font.Font('segoepr.ttf', 42)
-    def __init__(self, screen):
+    def __init__(self):
         self.system_labels()
+        self.buttons()
 
     def system_labels(self):
         pygame.draw.rect(screen, (100, 149, 237), (0, 20, width, 80))
         self.text = self.font.render('MAIN MENU', True, [0, 0, 0])
         screen.blit(self.text, (270, 25))
+
+    def buttons(self):
+        self.button_size = (240, 50)
+        self.button_account = Button(self.button_size[0], self.button_size[1])
+        self.button_account.draw((width / 2) - (self.button_size[0] / 2), 200, '  Personal Account')
+
+        self.button_game = Button()
+        self.button_game.draw((width / 2) - (self.button_size[0] / 2), 300, '      New Game')
+
+        self.button_settings = Button()
+        self.button_settings.draw((width / 2) - (self.button_size[0] / 2), 400, '        Settings')
+
+        self.button_records = Button()
+        self.button_records.draw((width / 2) - (self.button_size[0] / 2), 500, '   Table of Records')
+
+        self.button_exit = Button()
+        self.button_exit.draw((width / 2) - (self.button_size[0] / 2), 600, '        Logout')
 
 
 if __name__ == '__main__':
@@ -79,29 +97,10 @@ if __name__ == '__main__':
     fps = 30
     running = True
 
-
-
     while running:
-        Menu(screen)
-
+        Menu()
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        button_size = (240, 50)
-        button_account = Button(button_size[0], button_size[1])
-        button_account.draw((height / 2) - (button_size[0] / 4) - 10, 200, '  Personal Account')
-
-        button_game = Button(240, 50)
-        button_account.draw((height / 2) - (button_size[0] / 4) - 10, 300, '      New Game')
-
-        button_settings = Button(240, 50)
-        button_account.draw((height / 2) - (button_size[0] / 4) - 10, 400, '        Settings')
-
-        button_records = Button(240, 50)
-        button_account.draw((height / 2) - (button_size[0] / 4) - 10, 500, '   Table of Records')
-
-        button_exit = Button(200, 50)
-        button_account.draw((height / 2) - (button_size[0] / 4) - 10, 600, '        Logout')
     pygame.display.flip()
