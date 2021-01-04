@@ -21,7 +21,7 @@ def load_image(name, colorkey=None):
 class Button:
     pygame.init()
     button_sound = pygame.mixer.Sound('click_button.wav')
-    font = pygame.font.Font('Impact.ttf', 22)
+    font = pygame.font.Font('20008.ttf', 30)
 
     def __init__(self, width, height):
         self.width = width
@@ -32,19 +32,19 @@ class Button:
     def draw(self, x, y, message, function=None):
         self.mouse = pygame.mouse.get_pos()
         self.click = pygame.mouse.get_pressed(3)
+        self.image = load_image('button_inactive.jpg')
+        self.image_two = load_image('button_active.jpg')
 
         if x < self.mouse[0] < x + self.width and y < self.mouse[1] < y + self.heigth:
-            pygame.draw.rect(screen, self.active_color, (x, y, self.width, self.heigth))
+            screen.blit(self.image, (x, y))
             pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
 
-            if self.click[0] is True:
+            if self.click[0] is True and function is not None:
                 pygame.mixer.Sound.play(Button.button_sound)
                 pygame.time.delay(300)
-
-            if function is not None:
-                self.function()
+                function()
         else:
-            pygame.draw.rect(screen, self.inactive_color, (x, y, self.width, self.heigth))
+            screen.blit(self.image_two, (x, y))
             pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
         self.print_text(message, x + 5, y + 5)
 
@@ -58,32 +58,36 @@ class Button:
 
 class ProgramGreeting:
     pygame.font.init()
-    font = pygame.font.Font('taile.ttf', 100)
+    font = pygame.font.Font('20008.ttf', 20)
+    font_header = pygame.font.Font('20008.ttf', 70)
 
     def __init__(self):
         self.system_labels()
 
     def system_labels(self):
-        self.text = self.font.render('BattleShip', True, [0, 0, 0])
-        self.rect = pygame.draw.rect(screen, 'blue', (150, 20, 500, 120), 1)
-        screen.blit(self.text, (180, 20))
+        self.text = self.font_header.render('BattleShip', True, [0, 0, 0])
+        self.line = pygame.draw.line(screen, 'black', (150, 150), (640, 150), 3)
+        screen.blit(self.text, (170, 60))
 
         self.button_size = (240, 50)
 
         self.button_login = Button(*self.button_size)
-        self.button_login.draw(70, 350, '        Log in')
+        self.button_login.draw(65, 350, '       Log in')
 
         self.button_signin = Button(*self.button_size)
-        self.button_signin.draw(500, 350, '        Sign in')
+        self.button_signin.draw(505, 350, '       Sign in')
 
         self.button_gameinfo = Button(*self.button_size)
-        self.button_gameinfo.draw(70, 500, '      Game Info')
+        self.button_gameinfo.draw(65, 500, '   Game Info')
 
         self.button_developers = Button(*self.button_size)
-        self.button_developers.draw(500, 500, '       Developers')
+        self.button_developers.draw(505, 500, '  Developers')
 
         self.button_exit = Button(*self.button_size)
-        self.button_exit.draw(280, 600, '         Exit')
+        self.button_exit.draw(285, 600, '         Exit', self.button_exit_click)
+
+    def button_exit_click(self):
+        exit()
 
 
 if __name__ == '__main__':

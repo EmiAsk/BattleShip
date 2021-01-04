@@ -4,7 +4,8 @@ import sqlite3
 
 class Registration_User():
     pygame.font.init()
-    font = pygame.font.Font('taile.ttf', 100)
+    font = pygame.font.Font('20008.ttf', 20)
+    font_header = pygame.font.Font('20008.ttf', 35)
 
     def __init__(self, screen):
         self.screen = screen
@@ -13,15 +14,15 @@ class Registration_User():
         self.finally_password = None
 
     def system_labels(self):
-        self.text_login = self.font.render('Вход в аккаунт', True, (0, 0, 0))
+        self.text_login = self.font_header.render('Вход в аккаунт', True, (0, 0, 0))
         self.text_name = self.font.render('Имя:', True, (0, 0, 0))
         pygame.draw.rect(screen, 'black', (160, 80, 200, 30), 1)
         self.text_password = self.font.render('Пароль:', True, (0, 0, 0))
         pygame.draw.rect(screen, 'black', (160, 180, 200, 30), 1)
 
-        screen.blit(self.text_login, (180, 10))
-        screen.blit(self.text_name, (60, 82))
-        screen.blit(self.text_password, (60, 180))
+        screen.blit(self.text_login, (100, 10))
+        screen.blit(self.text_name, (80, 85))
+        screen.blit(self.text_password, (60, 185))
 
     def input_name(self, message):
         self.text_name = self.font.render(message, True, [0, 0, 0])
