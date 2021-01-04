@@ -4,7 +4,7 @@ import sqlite3
 
 class Registration_User():
     pygame.font.init()
-    font = pygame.font.Font('Gabriola.ttf', 30)
+    font = pygame.font.Font('taile.ttf', 100)
 
     def __init__(self, screen):
         self.screen = screen

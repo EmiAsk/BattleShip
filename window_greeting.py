@@ -7,7 +7,7 @@ from os import path
 def load_image(name, colorkey=None):
     fullname = path.join(name)
     if not path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
+        print(f"ОШИБКА: Файл '{fullname}' не найден")
         sys.exit()
     image = pygame.image.load(fullname)
     if colorkey is not None:
@@ -21,7 +21,7 @@ def load_image(name, colorkey=None):
 class Button:
     pygame.init()
     button_sound = pygame.mixer.Sound('click_button.wav')
-    font = pygame.font.Font('segoepr.ttf', 22)
+    font = pygame.font.Font('Impact.ttf', 22)
 
     def __init__(self, width, height):
         self.width = width
@@ -58,14 +58,15 @@ class Button:
 
 class ProgramGreeting:
     pygame.font.init()
-    font = pygame.font.Font('segoepr.ttf', 70)
+    font = pygame.font.Font('taile.ttf', 100)
 
     def __init__(self):
         self.system_labels()
 
     def system_labels(self):
         self.text = self.font.render('BattleShip', True, [0, 0, 0])
-        screen.blit(self.text, (190, 20))
+        self.rect = pygame.draw.rect(screen, 'blue', (150, 20, 500, 120), 1)
+        screen.blit(self.text, (180, 20))
 
         self.button_size = (240, 50)
 
