@@ -1,27 +1,31 @@
 import pygame
-import sys
+import config
 
+from sys import exit
 from os import path
 
 
-def load_image(name, colorkey=None):
-    fullname = path.join(name)
-    if not path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
-    image = pygame.image.load(fullname)
-    if colorkey is not None:
-        image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
+def load_image(name):
+    if not path.isfile(path.join(name)):
+        print(f"ERROR 01: '{path.join(name)}' not found.")
+        exit()
+    image = pygame.image.load(path.join(name))
     return image
+
+
+pygame.init()
+size = width, height = config.SIZE_WINDOW
+image = load_image(config.IMAGE_BACKGROUND)
+screen = pygame.display.set_mode(size)
+screen.blit(image, (0, 0))
+clock = pygame.time.Clock()
 
 
 class Button:
     pygame.init()
-    button_sound = pygame.mixer.Sound('click_button.wav')
-    font = pygame.font.Font('20008.ttf', 22)
+    button_sound = pygame.mixer.Sound(config.BUTTON_SOUND)
+    font = pygame.font.Font(config.FONT, 22)
+
     def __init__(self, width=350, height=50):
         self.width = width
         self.heigth = height
@@ -35,13 +39,11 @@ class Button:
         if x < self.mouse[0] < x + self.width and y < self.mouse[1] < y + self.heigth:
             pygame.draw.rect(screen, self.active_color, (x, y, self.width, self.heigth))
             pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
-
             if self.click[0] is True:
                 pygame.mixer.Sound.play(Button.button_sound)
                 pygame.time.delay(300)
+                self.click_button(function)
 
-            if function is not None:
-                self.function()
         else:
             pygame.draw.rect(screen, self.inactive_color, (x, y, self.width, self.heigth))
             pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
@@ -51,17 +53,18 @@ class Button:
         self.text = self.font.render(message, True, [0, 0, 0])
         screen.blit(self.text, (x, y))
 
-    def function(self):
-        pass
+    def click_button(self, function):
+        if function is not None:
+            function()
 
 
 class Menu:
     pygame.font.init()
-    font = pygame.font.Font('20008.ttf', 42)
+    font = pygame.font.Font('font.ttf', 42)
+
     def __init__(self):
         self.system_labels()
         self.buttons()
-        self.click_buttons()
 
     def system_labels(self):
         pygame.draw.rect(screen, '#c0c0c0', (0, 20, width, 80))
@@ -70,44 +73,59 @@ class Menu:
 
     def buttons(self):
         self.button_size = (260, 60)
-        self.button_account = Button()
-        self.button_account.draw(width - (self.button_size[0] + self.button_size[0] // 2), 200, '         Personal Account')
+        self.account_button = Button()
+        self.account_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 200,
+                                 '         Personal Account', self.opening_an_account)
 
-        self.button_game = Button()
-        self.button_game.draw(width - (self.button_size[0] + self.button_size[0] // 2), 300, '                 New Game')
+        self.game_button = Button()
+        self.game_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 300,
+                              '                 New Game', self.turning_on_the_game)
+        self.setting_button = Button()
+        self.setting_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 400,
+                                 '                   Settings', self.opening_setting)
 
-        self.button_settings = Button()
-        self.button_settings.draw(width - (self.button_size[0] + self.button_size[0] // 2), 400, '                   Settings')
+        self.high_score_table_button = Button()
+        self.high_score_table_button.draw(width - (self.button_size[0] + self.button_size[0] // 2),
+                                          500,
+                                          '           Table of Records', self.high_score_table)
 
-        self.button_records = Button()
-        self.button_records.draw(width - (self.button_size[0] + self.button_size[0] // 2), 500, '           Table of Records')
+        self.logout_button = Button()
+        self.logout_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 600,
+                                '                     Logout', self.logout)
 
-        self.button_exit = Button()
-        self.button_exit.draw(width - (self.button_size[0] + self.button_size[0] // 2), 600, '                     Logout')
+        self.help_button = Button(50, 50)
+        self.help_button.draw(10, 750, '  ?')
 
-        self.button_help = Button(50, 50)
-        self.button_help.draw(10, 750, '  ?')
+    def opening_an_account(self):
+        pass  # class Account
 
-    def click_buttons(self):
-        pass
+    def turning_on_the_game(self):
+        pass  # class game BattleShip
+
+    def opening_setting(self):
+        pass  # class Settings
+
+    def high_score_table(self):
+        pass  # class High Score Table
+
+    def logout(self):
+        pass  # class Greeting
+
 
 if __name__ == '__main__':
     pygame.init()
     pygame.mixer.init()
     size = width, height = 900, 800
     screen = pygame.display.set_mode(size)
-    image = load_image('fon.jpg')
+    image = load_image('background.jpg')
     screen.blit(image, (0, 0))
-    pygame.display.flip()
     clock = pygame.time.Clock()
-    fps = 30
     running = True
     menu = Menu()
     while running:
-        pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                menu.click_buttons()
-    pygame.display.flip()
+            if event.type == pygame.MOUSEMOTION or event.type == pygame.MOUSEBUTTONDOWN:
+                menu.buttons()
+        pygame.display.flip()
