@@ -22,7 +22,7 @@ def load_image(name, colorkey=None):
 
 pygame.init()
 pygame.mixer.init()
-size = width, height = 800, 700
+size = width, height = 900, 800
 screen = pygame.display.set_mode(size)
 image = load_image('fon.jpg')
 screen.blit(image, (0, 0))
@@ -52,6 +52,7 @@ class GameState:
 
     def change(self, state):
         self.state = state
+        return self.state
 
     def check(self, state):
         if self.state == state:
@@ -65,28 +66,27 @@ class Game:
 
     def start(self):
         # while True:
-            #print(self.game_state.change(State.GREETING))
-            if self.game_state.check(State.GREETING):
-                ProgramGreeting()
-            elif self.game_state.check(State.LOGIN):
-                Registration_User()
-            elif self.game_state.check(State.SIGNIN):
-                pass
-            elif self.game_state.check(State.DEVELOPERS):
-                pass
-            elif self.game_state.check(State.SETTINGS):
-                pass
-            elif self.game_state.check(State.GAME):
-                pass
-            elif self.game_state.check(State.ACCOUNT):
-                pass
-            elif self.game_state.check(State.TABLE_RECORDS):
-                pass
-            elif self.game_state.check(State.PAUSE):
-                pass
-            elif self.game_state.check(State.QUIT):
-                print('ex')
-                exit()
+        if self.game_state.check(State.GREETING):
+            ProgramGreeting()
+        elif self.game_state.check(State.LOGIN):
+            Registration_User()
+        elif self.game_state.check(State.SIGNIN):
+            pass
+        elif self.game_state.check(State.DEVELOPERS):
+            pass
+        elif self.game_state.check(State.SETTINGS):
+            pass
+        elif self.game_state.check(State.GAME):
+            pass
+        elif self.game_state.check(State.ACCOUNT):
+            pass
+        elif self.game_state.check(State.TABLE_RECORDS):
+            pass
+        elif self.game_state.check(State.PAUSE):
+            pass
+        elif self.game_state.check(State.QUIT):
+            exit()
+
 
 class Button:
     pygame.init()
@@ -133,7 +133,7 @@ class ProgramGreeting:
     font_header = pygame.font.Font('20008.ttf', 70)
 
     def __init__(self):
-        self.game_state = GameState()
+        self.game_state = State.GREETING
         self.text = self.font_header.render('BattleShip', True, [0, 0, 0])
         self.line = pygame.draw.line(screen, 'black', (150, 150), (640, 150), 3)
         screen.blit(self.text, (170, 60))
@@ -143,7 +143,6 @@ class ProgramGreeting:
         self.button_login = Button(*self.button_size)
         if self.button_login.draw(65, 350, '       Log in', None):
             self.game_state.change(State.LOGIN)
-            return
 
         self.button_signin = Button(*self.button_size)
         if self.button_signin.draw(505, 350, '       Sign in', None):
@@ -164,6 +163,13 @@ class ProgramGreeting:
         if self.button_exit.draw(285, 600, '         Exit', None):
             self.game_state.change(State.QUIT)
         pygame.display.flip()
+        self.working()
+
+    def working(self):
+        print(1)
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print(event.pos)
 
 
 class Registration_User():
@@ -171,11 +177,12 @@ class Registration_User():
     font = pygame.font.Font('20008.ttf', 35)
     font_header = pygame.font.Font('20008.ttf', 65)
 
-    screen = pygame.display.set_mode((800, 700))
+    screen = pygame.display.set_mode((900, 800))
     image = load_image('test_fon_line.jpg')
     screen.blit(image, (0, 0))
 
     def __init__(self):
+        self.game_state = GameState()
         self.system_labels()
         self.finally_name = None
         self.finally_password = None
@@ -284,9 +291,8 @@ if __name__ == '__main__':
     pygame.display.flip()
     clock = pygame.time.Clock()
     running = True
+    Game().start()
     while running:
-        Game().start()
-        pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
