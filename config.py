@@ -1,0 +1,2 @@
+SIZE_WINDOW = 900, 800
+IMAGE_BACKGROUND = 'background.jpg'
