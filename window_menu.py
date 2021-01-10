@@ -94,7 +94,7 @@ class Menu:
                                 '                     Logout', self.logout)
 
         self.help_button = Button(50, 50)
-        self.help_button.draw(10, 750, '  ?')
+        self.help_button.draw(10, 750, '  ?', self.help)
 
     def opening_an_account(self):
         pass  # class Account
@@ -111,15 +111,11 @@ class Menu:
     def logout(self):
         pass  # class Greeting
 
+    def help(self):
+        pass  # open help
+
 
 if __name__ == '__main__':
-    pygame.init()
-    pygame.mixer.init()
-    size = width, height = 900, 800
-    screen = pygame.display.set_mode(size)
-    image = load_image('background.jpg')
-    screen.blit(image, (0, 0))
-    clock = pygame.time.Clock()
     running = True
     menu = Menu()
     while running:
