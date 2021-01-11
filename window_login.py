@@ -6,10 +6,6 @@ from os import path
 from sys import exit
 
 
-class DataError(Exception):
-    pass
-
-
 def load_image(name):
     if not path.isfile(path.join(name)):
         print(f"ERROR 01: '{path.join(name)}' not found.")
