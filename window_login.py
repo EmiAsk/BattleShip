@@ -48,7 +48,7 @@ class Button:
         else:
             pygame.draw.rect(screen, self.inactive_color, (x, y, self.width, self.heigth))
             pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
-        self.print_text(message, x + 5, y + 10)
+        self.print_text(message, x + 20, y + 10)
 
     def print_text(self, message, x, y):
         self.text = self.font.render(message, True, [0, 0, 0])
@@ -90,10 +90,10 @@ class Login():
 
     def buttons(self):
         self.continue_button = Button(240, 50)
-        self.continue_button.draw(330, 500, '         Continue', self.data_checking)
+        self.continue_button.draw(330, 500, '      Continue', self.data_checking)
 
-        self.help_button = Button(50, 50)
-        self.help_button.draw(10, 750, '  ?', self.help)
+        self.help_button = Button(55, 50)
+        self.help_button.draw(10, 750, '?', self.help)
 
     def data_checking(self):
         connect = sqlite3.connect('battleship.db')

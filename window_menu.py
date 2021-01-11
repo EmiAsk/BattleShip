@@ -47,7 +47,7 @@ class Button:
         else:
             pygame.draw.rect(screen, self.inactive_color, (x, y, self.width, self.heigth))
             pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
-        self.print_text(message, x + 5, y + 10)
+        self.print_text(message, x + 20, y + 10)
 
     def print_text(self, message, x, y):
         self.text = self.font.render(message, True, [0, 0, 0])
@@ -75,26 +75,26 @@ class Menu:
         self.button_size = (260, 60)
         self.account_button = Button()
         self.account_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 200,
-                                 '         Personal Account', self.opening_an_account)
+                                 '< Personal Account >', self.opening_an_account)
 
         self.game_button = Button()
         self.game_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 300,
-                              '                 New Game', self.turning_on_the_game)
+                              '< New Game >', self.turning_on_the_game)
         self.setting_button = Button()
         self.setting_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 400,
-                                 '                   Settings', self.opening_setting)
+                                 '< Settings >', self.opening_setting)
 
         self.high_score_table_button = Button()
         self.high_score_table_button.draw(width - (self.button_size[0] + self.button_size[0] // 2),
                                           500,
-                                          '           Table of Records', self.high_score_table)
+                                          '< Table of Records >', self.high_score_table)
 
         self.logout_button = Button()
         self.logout_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 600,
-                                '                     Logout', self.logout)
+                                '< Logout >', self.logout)
 
-        self.help_button = Button(50, 50)
-        self.help_button.draw(10, 750, '  ?', self.help)
+        self.help_button = Button(55, 50)
+        self.help_button.draw(10, 750, '?', self.help)
 
     def opening_an_account(self):
         pass  # class Account
