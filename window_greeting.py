@@ -30,8 +30,8 @@ class Button:
     def __init__(self, width=350, height=50):
         self.width = width
         self.heigth = height
-        self.inactive_color = '#c0c0c0'
-        self.active_color = '#a6a6a6'
+        self.inactive_color = config.SILVER_COLOR
+        self.active_color = config.DARK_SILVER_COLOR
 
     def draw(self, x, y, message, function=None):
         self.mouse = pygame.mouse.get_pos()
@@ -62,13 +62,13 @@ class Button:
 class Greeting:
     pygame.font.init()
     font = pygame.font.Font(config.FONT, 20)
-    font_header = pygame.font.Font('Chiller Regular.ttf', 170)
+    font_header = pygame.font.Font(config.FONT, 110)
 
     def __init__(self):
         self.text = self.font_header.render('BattleShip', True, [0, 0, 0])
-        self.text_2 = self.font_header.render('BattleShip', True, '#c0c0c0')
-        screen.blit(self.text_2, (373, 15))
-        screen.blit(self.text, (370, 15))
+        self.text_2 = self.font_header.render('BattleShip', True, config.SILVER_COLOR)
+        screen.blit(self.text_2, (373, 25))
+        screen.blit(self.text, (370, 25))
 
         self.buttons()
 

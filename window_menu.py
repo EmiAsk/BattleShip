@@ -29,8 +29,8 @@ class Button:
     def __init__(self, width=350, height=50):
         self.width = width
         self.heigth = height
-        self.inactive_color = '#c0c0c0'
-        self.active_color = '#a6a6a6'
+        self.inactive_color = config.SILVER_COLOR
+        self.active_color = config.DARK_SILVER_COLOR
 
     def draw(self, x, y, message, function=None):
         self.mouse = pygame.mouse.get_pos()
@@ -67,7 +67,7 @@ class Menu:
         self.buttons()
 
     def system_labels(self):
-        pygame.draw.rect(screen, '#c0c0c0', (0, 20, width, 80))
+        pygame.draw.rect(screen, config.SILVER_COLOR, (0, 20, width, 80))
         self.text = self.font.render('MAIN MENU', True, [0, 0, 0])
         screen.blit(self.text, (300, 35))
 

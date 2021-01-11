@@ -30,8 +30,8 @@ class Button:
     def __init__(self, width=350, height=50):
         self.width = width
         self.heigth = height
-        self.inactive_color = '#c0c0c0'
-        self.active_color = '#a6a6a6'
+        self.inactive_color = config.SILVER_COLOR
+        self.active_color = config.DARK_SILVER_COLOR
 
     def draw(self, x, y, message, function=None):
         self.mouse = pygame.mouse.get_pos()
@@ -67,7 +67,7 @@ class Greeting:
         self.buttons()
         self.text = self.font.render('The game is paused.', True, [0, 0, 0])
         pygame.draw.line(screen, 'black', (350, 150), (860, 150), 4)
-        screen.blit(self.text, (350, 90))
+        screen.blit(self.text, (400, 90))
 
     def buttons(self):
         self.button_login = Button()
