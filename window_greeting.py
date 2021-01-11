@@ -62,9 +62,14 @@ class Button:
 class Greeting:
     pygame.font.init()
     font = pygame.font.Font(config.FONT, 20)
-    font_header = pygame.font.Font(config.FONT, 70)
+    font_header = pygame.font.Font('Chiller Regular.ttf', 170)
 
     def __init__(self):
+        self.text = self.font_header.render('BattleShip', True, [0, 0, 0])
+        self.text_2 = self.font_header.render('BattleShip', True, '#c0c0c0')
+        screen.blit(self.text_2, (373, 15))
+        screen.blit(self.text, (370, 15))
+
         self.buttons()
 
     def buttons(self):
