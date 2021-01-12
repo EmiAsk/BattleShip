@@ -80,17 +80,14 @@ class Menu:
         self.game_button = Button()
         self.game_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 300,
                               '< New Game >', self.turning_on_the_game)
-        self.setting_button = Button()
-        self.setting_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 400,
-                                 '< Settings >', self.opening_setting)
 
         self.high_score_table_button = Button()
         self.high_score_table_button.draw(width - (self.button_size[0] + self.button_size[0] // 2),
-                                          500,
+                                          400,
                                           '< Table of Records >', self.high_score_table)
 
         self.logout_button = Button()
-        self.logout_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 600,
+        self.logout_button.draw(width - (self.button_size[0] + self.button_size[0] // 2), 500,
                                 '< Logout >', self.logout)
 
         self.help_button = Button(55, 50)
@@ -101,9 +98,6 @@ class Menu:
 
     def turning_on_the_game(self):
         pass  # class game BattleShip
-
-    def opening_setting(self):
-        pass  # class Settings
 
     def high_score_table(self):
         pass  # class High Score Table
