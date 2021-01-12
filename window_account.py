@@ -55,7 +55,7 @@ class Button:
         screen.blit(self.text, (x, y))
 
 
-class Settings:
+class Account:
     pygame.font.init()
     font_header = pygame.font.Font(config.FONT, 70)
     font = pygame.font.Font(config.FONT, 28)
@@ -66,7 +66,10 @@ class Settings:
 
     def buttons(self):
         self.button = Button(230, 50)
-        self.button.draw(330, 700, ' < Back to menu >')
+        self.button.draw(330, 700, ' < Back to menu >', self.return_func)
+
+    def return_func(self):
+        pass
 
     def system_labels(self):
         pygame.draw.rect(screen, (166, 120, 65), (30, 30, 840, 745), 0)
@@ -102,14 +105,14 @@ class Settings:
 
 
 
-settings = Settings()
+account = Account()
 if __name__ == '__main__':
     running = True
-    settings.buttons()
+    account.buttons()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
-                settings.buttons()
+                account.buttons()
         pygame.display.flip()
