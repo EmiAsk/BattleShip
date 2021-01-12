@@ -40,10 +40,10 @@ class Button:
         if x < self.mouse[0] < x + self.width and y < self.mouse[1] < y + self.heigth:
             pygame.draw.rect(screen, self.active_color, (x, y, self.width, self.heigth))
             pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
-            if self.click[0] is True:
+            if self.click[0] is True and function is not None:
                 pygame.mixer.Sound.play(Button.button_sound)
                 pygame.time.delay(300)
-                self.click_button(function)
+                function()
 
         else:
             pygame.draw.rect(screen, self.inactive_color, (x, y, self.width, self.heigth))
@@ -53,10 +53,6 @@ class Button:
     def print_text(self, message, x, y):
         self.text = self.font.render(message, True, [0, 0, 0])
         screen.blit(self.text, (x, y))
-
-    def click_button(self, function):
-        if function is not None:
-            function()
 
 
 class Greeting:
@@ -69,7 +65,6 @@ class Greeting:
         self.text_2 = self.font_header.render('BattleShip', True, config.SILVER_COLOR)
         screen.blit(self.text_2, (373, 25))
         screen.blit(self.text, (370, 25))
-
         self.buttons()
 
     def buttons(self):
@@ -82,11 +77,8 @@ class Greeting:
         self.button_gameinfo = Button()
         self.button_gameinfo.draw(500, 470, '< Game Info >', self.gameinfo)
 
-        self.button_developers = Button()
-        self.button_developers.draw(500, 590, '< Developers >', self.developers_info)
-
         self.button_exit = Button()
-        self.button_exit.draw(500, 710, '< Exit >', self.exit_game)
+        self.button_exit.draw(500, 590, '< Exit >', self.exit_game)
 
         self.help_button = Button(55, 50)
         self.help_button.draw(10, 750, '?', self.help)
@@ -100,23 +92,19 @@ class Greeting:
     def gameinfo(self):
         pass  # class Game Info
 
-    def developers_info(self):
-        pass  # class Developers
-
     def help(self):
         pass
 
     def exit_game(self):
         exit()
 
-
 if __name__ == '__main__':
     running = True
-    Greeting()
+    greeting = Greeting()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION or event.type == pygame.MOUSEBUTTONDOWN:
-                Greeting()
+                greeting.buttons()
         pygame.display.flip()
