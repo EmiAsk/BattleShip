@@ -98,6 +98,7 @@ class Greeting:
     def exit_game(self):
         exit()
 
+
 if __name__ == '__main__':
     running = True
     greeting = Greeting()

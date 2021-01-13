@@ -103,8 +103,6 @@ class Account:
         pygame.draw.rect(screen, 'black', (80, 180, 750, 170), 2)
 
 
-
-
 account = Account()
 if __name__ == '__main__':
     running = True
