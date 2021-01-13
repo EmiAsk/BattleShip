@@ -52,7 +52,7 @@ class Button:
         self.print_text(message, x + 20, y + 10)
 
     def print_text(self, message, x, y):
-        self.text = self.font.render(message, True, [0, 0, 0])
+        self.text = Button.font.render(message, True, [0, 0, 0])
         screen.blit(self.text, (x, y))
 
 
@@ -62,22 +62,15 @@ class Table:
     font = pygame.font.Font(config.FONT, 28)
 
     def __init__(self):
-        self.music = 0
         self.system_labels()
-
-    def buttons(self):
-        self.button = Button(230, 50)
-        self.button.draw(330, 700, ' < Back to menu >', self.return_func)
-
-    def return_func(self):
-        pass
+        self.table()
+        self.data()
 
     def system_labels(self):
         pygame.draw.rect(screen, (166, 120, 65), (30, 30, 840, 745), 0)
         pygame.draw.line(screen, 'black', (30, 150), (867, 150), 4)
         self.header = self.font_header.render('Table of records', True, [0, 0, 0])
         screen.blit(self.header, (200, 40))
-        self.table()
 
     def table(self):
         for row in range(12):
@@ -88,19 +81,28 @@ class Table:
             screen.blit(self.font.render(config.TABLE_HEADERS[column - 1], True, [0, 0, 0]),
                         (110 + column * 100, 180))
         screen.blit(self.font.render(config.TABLE_HEADERS[0], True, [0, 0, 0]), (110, 180))
-        self.data()
 
     def data(self):
         connect = sqlite3.connect('battleship.db')
         cursor = connect.cursor()
         self.request = cursor.execute('SELECT * FROM users').fetchall()
-        self.table_data = sorted(self.request[:10], key=lambda x: x[4])
+        self.table_data = sorted(self.request[:10], key=lambda x: x[4], reverse=True)
+
         for x in self.table_data:
             self.coefficient = self.table_data.index(x)
             screen.blit(self.font.render(x[1], True, [0, 0, 0]), (50, 220 + 40 * self.coefficient))
-            for num in range(3, 8):
-                screen.blit(self.font.render(str(x[num]), True, [0, 0, 0]),
-                            (10 + 100 * num, 220 + 40 * self.coefficient))
+
+            for number in range(3, 8):
+                screen.blit(self.font.render(str(x[number]), True, [0, 0, 0]),
+                            (10 + 100 * number, 220 + 40 * self.coefficient))
+        connect.close()
+
+    def buttons(self):
+        self.button = Button(230, 50)
+        self.button.draw(330, 700, ' < Back to menu >', self.return_func)
+
+    def return_func(self):
+        pass
 
 
 table = Table()

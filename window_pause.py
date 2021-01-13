@@ -40,10 +40,10 @@ class Button:
         if x < self.mouse[0] < x + self.width and y < self.mouse[1] < y + self.heigth:
             pygame.draw.rect(screen, self.active_color, (x, y, self.width, self.heigth))
             pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
-            if self.click[0] is True:
+            if self.click[0] is True and function is not None:
                 pygame.mixer.Sound.play(Button.button_sound)
                 pygame.time.delay(300)
-                self.click_button(function)
+                function()
 
         else:
             pygame.draw.rect(screen, self.inactive_color, (x, y, self.width, self.heigth))
@@ -54,12 +54,8 @@ class Button:
         self.text = self.font.render(message, True, [0, 0, 0])
         screen.blit(self.text, (x, y))
 
-    def click_button(self, function):
-        if function is not None:
-            function()
 
-
-class Greeting:
+class Pause:
     pygame.font.init()
     font = pygame.font.Font(config.FONT, 44)
 
@@ -76,25 +72,19 @@ class Greeting:
         self.button_signin = Button()
         self.button_signin.draw(500, 370, '< Go to the menu >', self.to_menu)
 
-        self.help_button = Button(55, 50)
-        self.help_button.draw(10, 750, '?', self.help)
-
     def to_game(self):
         pass  # class Game
 
     def to_menu(self):
         pass  # class Menu
 
-    def help(self):
-        pass
-
 if __name__ == '__main__':
     running = True
-    Greeting()
+    Pause()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION or event.type == pygame.MOUSEBUTTONDOWN:
-                Greeting()
+                Pause()
         pygame.display.flip()

@@ -61,15 +61,8 @@ class Account:
     font = pygame.font.Font(config.FONT, 28)
 
     def __init__(self):
-        self.music = 0
         self.system_labels()
-
-    def buttons(self):
-        self.button = Button(230, 50)
-        self.button.draw(330, 700, ' < Back to menu >', self.return_func)
-
-    def return_func(self):
-        pass
+        self.data_table
 
     def system_labels(self):
         pygame.draw.rect(screen, (166, 120, 65), (30, 30, 840, 745), 0)
@@ -79,8 +72,8 @@ class Account:
         screen.blit(self.header, (190, 40))
         screen.blit(self.picture_user, (100, 200))
 
-        self.name_text = self.font.render('Name: User1234', True, [0, 0, 0])
-        self.reg_text = self.font.render('Date of registration: 12.01.2021', True, [0, 0, 0])
+        self.name_text = self.font.render('Name:', True, [0, 0, 0])
+        self.reg_text = self.font.render('Date of registration:', True, [0, 0, 0])
         pygame.draw.line(screen, 'black', (300, 250), (510, 250), 3)
         screen.blit(self.name_text, (300, 200))
         screen.blit(self.reg_text, (300, 270))
@@ -91,16 +84,26 @@ class Account:
         self.status_text = self.font.render('Player level: newbie (1)', True, [0, 0, 0])
         screen.blit(self.status_text, (100, 450))
 
-        self.games = self.font.render('All games: 57', True, [0, 0, 0])
+        self.games = self.font.render('All games:', True, [0, 0, 0])
         screen.blit(self.games, (100, 500))
 
-        self.wins = self.font.render('Wins: 25', True, [0, 0, 0])
+        self.wins = self.font.render('Wins:', True, [0, 0, 0])
         screen.blit(self.wins, (100, 550))
 
-        self.lose = self.font.render('Lose: 6', True, [0, 0, 0])
+        self.lose = self.font.render('Lose:', True, [0, 0, 0])
         screen.blit(self.lose, (100, 600))
 
         pygame.draw.rect(screen, 'black', (80, 180, 750, 170), 2)
+
+    def data_table(self):
+        pass
+
+    def buttons(self):
+        self.button = Button(230, 50)
+        self.button.draw(330, 700, ' < Back to menu >', self.return_func)
+
+    def return_func(self):
+        pass
 
 
 account = Account()

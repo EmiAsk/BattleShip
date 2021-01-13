@@ -80,9 +80,6 @@ class Greeting:
         self.button_exit = Button()
         self.button_exit.draw(500, 590, '< Exit >', self.exit_game)
 
-        self.help_button = Button(55, 50)
-        self.help_button.draw(10, 750, '?', self.help)
-
     def login(self):
         pass  # class Login
 

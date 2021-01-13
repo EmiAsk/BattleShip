@@ -70,11 +70,6 @@ class Login:
         self.entered_name = ''
         self.entered_password = ''
 
-    def render_text(self, text, x, y, fsize):
-        lines = text.split('\n')
-        for i, line in enumerate(lines):
-            screen.blit(self.font.render(line, True, [0, 0, 0]), (x, y + fsize * i))
-
     def system_labels(self):
         pygame.draw.rect(screen, (166, 120, 65), (30, 30, 840, 745), 0)
         pygame.draw.line(screen, 'black', (30, 150), (867, 150), 4)
@@ -90,14 +85,9 @@ class Login:
         screen.blit(self.text_name, (90, 280))
         screen.blit(self.text_password, (90, 380))
 
-        self.render_text('Registering in the app will allow you to be a regular member.\n\n   To create an account, fill in both fields and click  "continue"', 60, 160, 22)
-
-    def buttons(self):
-        self.continue_button = Button(230, 50)
-        self.continue_button.draw(330, 450, '    < Continue >', self.data_checking)
-
-        self.button = Button(230, 50)
-        self.button.draw(330, 700, ' < Back to menu >', self.return_func)
+        self.render_text(
+            'Registering in the app will allow you to be a regular member.\n\n   To create an account, fill in both fields and click  "continue"',
+            60, 160, 22)
 
     def data_checking(self):
         connect = sqlite3.connect('battleship.db')
@@ -122,8 +112,17 @@ class Login:
             if password != user_password:
                 print('ERROR 02: Incorrect data entered.')
 
-    def return_func(self):
-        pass
+    def buttons(self):
+        self.continue_button = Button(230, 50)
+        self.continue_button.draw(330, 450, '    < Continue >', self.data_checking)
+
+        self.button = Button(230, 50)
+        self.button.draw(330, 700, ' < Back to menu >', self.return_func)
+
+    def render_text(self, text, x, y, fsize):
+        lines = text.split('\n')
+        for i, line in enumerate(lines):
+            screen.blit(self.font.render(line, True, [0, 0, 0]), (x, y + fsize * i))
 
     def name_input(self, event):
         if flag_input_name:
@@ -153,6 +152,9 @@ class Login:
             screen.blit(self.password, (245, 380))
             pygame.display.flip()
 
+    def return_func(self):
+        pass
+
 
 if __name__ == '__main__':
     running = True
@@ -164,7 +166,6 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                print(event.pos)
                 if event.pos[0] in range(200, 700) and event.pos[1] in range(280, 320):
                     flag_input_name = True
                     flag_input_password = False
@@ -180,4 +181,3 @@ if __name__ == '__main__':
                 elif flag_input_password:
                     login.password_input(event)
             pygame.display.flip()
-

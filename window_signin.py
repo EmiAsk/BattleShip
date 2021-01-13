@@ -59,8 +59,8 @@ class Button:
 class Login:
     pygame.font.init()
     font_header = pygame.font.Font(config.FONT, 70)
-    font = pygame.font.Font(config.FONT, 28)
     font_input = pygame.font.Font(config.FONT, 28)
+    font_text = pygame.font.Font(config.FONT, 28)
 
     def __init__(self):
         self.system_labels()
@@ -70,11 +70,6 @@ class Login:
         self.entered_name = ''
         self.entered_password = ''
 
-    def render_text(self, text, x, y, fsize):
-        lines = text.split('\n')
-        for i, line in enumerate(lines):
-            screen.blit(self.font.render(line, True, [0, 0, 0]), (x, y + fsize * i))
-
     def system_labels(self):
         pygame.draw.rect(screen, (166, 120, 65), (30, 30, 840, 745), 0)
         pygame.draw.line(screen, 'black', (30, 150), (867, 150), 4)
@@ -83,23 +78,18 @@ class Login:
         pygame.draw.rect(screen, 'black', (240, 380, 500, 40), 1)
 
         self.text = self.font_header.render('SIGNIN', True, [0, 0, 0])
-        self.text_name = self.font.render('Name:', True, (0, 0, 0))
-        self.text_password = self.font.render('Password:', True, (0, 0, 0))
+        self.text_name = self.font_text.render('Name:', True, (0, 0, 0))
+        self.text_password = self.font_text.render('Password:', True, (0, 0, 0))
 
         screen.blit(self.text, (350, 40))
         screen.blit(self.text_name, (90, 280))
         screen.blit(self.text_password, (90, 380))
 
-        self.render_text('If you are already registered, enter your account details to \n\ncontinue. Do not forget to press the "continue" key', 60, 160, 22)
+        self.render_text(
+            'If you are already registered, enter your account details to \n\ncontinue. Do not forget to press the "continue" key',
+            60, 160, 22)
 
-    def buttons(self):
-        self.continue_button = Button(230, 50)
-        self.continue_button.draw(330, 450, '    < Continue >', self.data_checking)
-
-        self.button = Button(230, 50)
-        self.button.draw(330, 700, ' < Back to menu >', self.return_func)
-
-    def data_checking(self):
+    def data_add(self):
         connect = sqlite3.connect('battleship.db')
         cursor = connect.cursor()
         self.usernames = cursor.execute('SELECT name FROM users').fetchall()
@@ -112,10 +102,9 @@ class Login:
         else:
             pygame.draw.lines(screen, 'green', False, ((710, 280), (725, 320), (740, 280)),
                               width=5)
-            pygame.draw.lines(screen, 'green', False, ((710, 280), (725, 320), (740, 280)),
-                              width=5)
-            from hashlib import sha512
             try:
+                from hashlib import sha512
+                self.finally_password = sha512(self.finally_password.encode())
                 self.request = cursor.execute(f'''INSERT INTO
             users(name, password, all_games, wins, lose)
             VALUES("{self.finally_name}", "{self.finally_password}", "0", "0", "0") ''')
@@ -124,8 +113,17 @@ class Login:
                 pass
             connect.close()
 
-    def return_func(self):
-        pass
+    def buttons(self):
+        self.continue_button = Button(230, 50)
+        self.continue_button.draw(330, 450, '    < Continue >', self.data_add)
+
+        self.button = Button(230, 50)
+        self.button.draw(330, 700, ' < Back to menu >', self.return_func)
+
+    def render_text(self, text, x, y, fsize):
+        lines = text.split('\n')
+        for i, line in enumerate(lines):
+            screen.blit(self.font_text.render(line, True, [0, 0, 0]), (x, y + fsize * i))
 
     def name_input(self, event):
         if flag_input_name:
@@ -154,6 +152,9 @@ class Login:
             self.password = self.font_input.render(self.entered_password, True, [0, 0, 0])
             screen.blit(self.password, (245, 380))
             pygame.display.flip()
+
+    def return_func(self):
+        pass
 
 
 if __name__ == '__main__':
