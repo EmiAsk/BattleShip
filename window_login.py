@@ -125,6 +125,7 @@ class Login:
             screen.blit(self.font.render(line, True, [0, 0, 0]), (x, y + fsize * i))
 
     def name_input(self, event):
+        global flag_input_name
         if flag_input_name:
             if event.key == pygame.K_BACKSPACE:
                 self.entered_name = self.entered_name[:-1]
@@ -139,6 +140,7 @@ class Login:
             pygame.display.flip()
 
     def password_input(self, event):
+        global flag_input_password
         if flag_input_password:
             if event.key == pygame.K_BACKSPACE:
                 self.entered_password = self.entered_password[:-1]
@@ -156,10 +158,12 @@ class Login:
         pass
 
 
-if __name__ == '__main__':
-    running = True
+flag_input_name = False
+flag_input_password = False
+def main():
     flag_input_name = False
     flag_input_password = False
+    running = True
     login = Login()
     while running:
         for event in pygame.event.get():
@@ -181,3 +185,4 @@ if __name__ == '__main__':
                 elif flag_input_password:
                     login.password_input(event)
             pygame.display.flip()
+main()
