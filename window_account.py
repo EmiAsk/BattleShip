@@ -1,3 +1,5 @@
+import sqlite3
+
 import pygame
 from sys import exit
 import config
@@ -62,18 +64,18 @@ class Account:
 
     def __init__(self):
         self.system_labels()
-        self.data_table
 
     def system_labels(self):
+        data = self.data_table()
         pygame.draw.rect(screen, (166, 120, 65), (30, 30, 840, 745), 0)
         pygame.draw.line(screen, 'black', (30, 150), (867, 150), 4)
         self.header = self.font_header.render('Personal Account', True, [0, 0, 0])
         self.picture_user = load_image('user.png')
         screen.blit(self.header, (190, 40))
-        screen.blit(self.picture_user, (100, 200))
+        #screen.blit(self.picture_user, (100, 200))
 
-        self.name_text = self.font.render('Name:', True, [0, 0, 0])
-        self.reg_text = self.font.render('Date of registration:', True, [0, 0, 0])
+        self.name_text = self.font.render(f'Name: {data[0]}', True, [0, 0, 0])
+        self.reg_text = self.font.render(f'Date of registration: {data[1]}', True, [0, 0, 0])
         pygame.draw.line(screen, 'black', (300, 250), (510, 250), 3)
         screen.blit(self.name_text, (300, 200))
         screen.blit(self.reg_text, (300, 270))
@@ -81,22 +83,28 @@ class Account:
         self.stat_text = self.font.render('--- Information about games ---', True, [0, 0, 0])
         screen.blit(self.stat_text, (250, 380))
 
-        self.status_text = self.font.render('Player level: newbie (1)', True, [0, 0, 0])
+        self.status_text = self.font.render(f'Player level: {data[2]}', True, [0, 0, 0])
         screen.blit(self.status_text, (100, 450))
 
-        self.games = self.font.render('All games:', True, [0, 0, 0])
+        self.games = self.font.render(f'All games: {data[4]}', True, [0, 0, 0])
         screen.blit(self.games, (100, 500))
 
-        self.wins = self.font.render('Wins:', True, [0, 0, 0])
+        self.wins = self.font.render(f'Wins: {data[5]}', True, [0, 0, 0])
         screen.blit(self.wins, (100, 550))
 
-        self.lose = self.font.render('Lose:', True, [0, 0, 0])
+        self.lose = self.font.render(f'Lose: {data[-1]}', True, [0, 0, 0])
         screen.blit(self.lose, (100, 600))
 
         pygame.draw.rect(screen, 'black', (80, 180, 750, 170), 2)
 
-    def data_table(self):
-        pass
+    def data_table(self, value=1):
+        self.con = sqlite3.connect('battleship.db')
+        self.cur = self.con.cursor()
+        values = (value,)
+        result = self.cur.execute('SELECT name, date_of_registration, player_level, all_games, wins, lose FROM users WHERE id = ?', values).fetchall()
+        self.con.close()
+        for elem in result:
+            return elem
 
     def buttons(self):
         self.button = Button(230, 50)
