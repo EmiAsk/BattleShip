@@ -62,27 +62,25 @@ class Table:
     font = pygame.font.Font(config.FONT, 28)
 
     def __init__(self):
-        self.system_labels()
-        self.table()
-        self.data()
+        self.draw()
+        self.filling_table()
 
-    def system_labels(self):
+    def draw(self):
         pygame.draw.rect(screen, (166, 120, 65), (30, 30, 840, 745), 0)
         pygame.draw.line(screen, 'black', (30, 150), (867, 150), 4)
         self.header = self.font_header.render('Table of records', True, [0, 0, 0])
         screen.blit(self.header, (200, 40))
 
-    def table(self):
         for row in range(12):
             pygame.draw.rect(screen, 'black', (40, 180 + (row * 40), 820, 40), 2)
-        for column in range(2, 7):
+        for column in range(2, 6):
             pygame.draw.line(screen, 'black', (100 + 100 * column, 180), (100 + 100 * column, 660),
                              2)
             screen.blit(self.font.render(config.TABLE_HEADERS[column - 1], True, [0, 0, 0]),
                         (110 + column * 100, 180))
         screen.blit(self.font.render(config.TABLE_HEADERS[0], True, [0, 0, 0]), (110, 180))
 
-    def data(self):
+    def filling_table(self):
         connect = sqlite3.connect('battleship.db')
         cursor = connect.cursor()
         self.request = cursor.execute('SELECT * FROM users').fetchall()
@@ -93,8 +91,11 @@ class Table:
             screen.blit(self.font.render(x[1], True, [0, 0, 0]), (50, 220 + 40 * self.coefficient))
 
             for number in range(3, 8):
-                screen.blit(self.font.render(str(x[number]), True, [0, 0, 0]),
-                            (10 + 100 * number, 220 + 40 * self.coefficient))
+                if number == 7:
+                    continue
+                else:
+                    screen.blit(self.font.render(str(x[number]), True, [0, 0, 0]),
+                                (10 + 100 * number, 220 + 40 * self.coefficient))
         connect.close()
 
     def buttons(self):
@@ -102,17 +103,17 @@ class Table:
         self.button.draw(330, 700, ' < Back to menu >', self.return_func)
 
     def return_func(self):
-        pass
+        window_menu.main()
 
 
-table = Table()
-if __name__ == '__main__':
-    running = True
-    table.buttons()
-    while running:
+def main():
+    table = Table()
+    work = True
+    table.draw()
+    while work:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
+                work = False
+            if event.type in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION):
                 table.buttons()
         pygame.display.flip()
