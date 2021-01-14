@@ -21,18 +21,6 @@ screen.blit(image, (0, 0))
 pygame.display.flip()
 clock = pygame.time.Clock()
 
-class GameState:
-    WINDOW_GREETING = 1
-    WINDOW_LOGIN = 2
-    WINDOW_SIGNIN = 3
-    WINDOW_MENU = 4
-    WINDOW_ACCOUNT = 5
-    WINDOW_GAME = 6
-    WINDOW_TABLE = 7
-    WINDOW_PAUSE = 8
-    WINDOW_GAME_INFO = 9
-    QUIT = 10
-
 
 class Button:
     pygame.init()
@@ -74,7 +62,6 @@ class Greeting:
     def __init__(self):
         self.font = pygame.font.Font(config.FONT, 20)
         self.font_header = pygame.font.Font(config.FONT, 110)
-        self.state = GameState.WINDOW_GREETING
         self.draw()
 
     def draw(self):
@@ -84,7 +71,7 @@ class Greeting:
         screen.blit(self.header, (370, 25))
 
         self.button_login = Button()
-        print(self.button_login.draw(500, 230, '< Log in >', self.login))
+        self.button_login.draw(500, 230, '< Log in >', self.login)
 
         self.button_signin = Button()
         self.button_signin.draw(500, 350, '< Sign in >', self.signin)
@@ -96,25 +83,25 @@ class Greeting:
         self.button_exit.draw(500, 590, '< Exit >', self.exit_game)
 
     def login(self):
-        self.state = GameState.WINDOW_LOGIN
+        window_login.main()
 
     def signin(self):
-        self.state = GameState.WINDOW_SIGNIN
+        window_signin.main()
 
     def gameinfo(self):
-        self.state = GameState.WINDOW_GAME_INFO
+        window_gameinfo.main()
 
     def exit_game(self):
         exit()
 
 
-if __name__ == '__main__':
-    running = True
+def main():
+    work = True
     greeting = Greeting()
-    while running:
+    while work:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEMOTION or event.type == pygame.MOUSEBUTTONDOWN:
+                work = False
+            if event.type in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION):
                 greeting.draw()
         pygame.display.flip()
