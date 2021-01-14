@@ -40,7 +40,7 @@ class Button:
         if x < self.mouse[0] < x + self.width and y < self.mouse[1] < y + self.heigth:
             pygame.draw.rect(screen, self.active_color, (x, y, self.width, self.heigth))
             pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
-            if self.click[0] is True and  function is not None:
+            if self.click[0] is True and function is not None:
                 pygame.mixer.Sound.play(Button.button_sound)
                 pygame.time.delay(300)
                 function()
@@ -61,14 +61,17 @@ class GameInfo:
     font = pygame.font.Font('font.ttf', 24)
 
     def __init__(self):
+        self.pages = [self.goal, self.arrange, self.walk]
+        self.page = 0
+        self.draw()
+
+    def draw(self):
         pygame.draw.rect(screen, (166, 120, 65), (30, 30, 840, 745), 0)
         pygame.draw.line(screen, 'black', (30, 150), (867, 150), 4)
         self.text = self.font_header.render('Goal of the game', True, [0, 0, 0])
-        screen.blit(self.text, (170, 40))
-
-        self.pages = [self.goal, self.arrange, self.walk]
-        self.page = 0
         self.pages[self.page]()
+        screen.blit(self.text, (170, 40))
+        self.buttons()
 
     def buttons(self):
         self.button_back = Button(60, 50)
@@ -127,14 +130,14 @@ class GameInfo:
         self.render_text(config.TEXT_INFO_GAME[config.HEAD_INFO_GAME[2]], 60, 180, 40)
 
 
-game = GameInfo()
-if __name__ == '__main__':
-    running = True
-    game.buttons()
-    while running:
+def main():
+    gameinfo = GameInfo()
+    work = True
+    gameinfo.draw()
+    while work:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
-                game.buttons()
-        pygame.display.flip()
+                work = False
+            if event.type in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION):
+                gameinfo.buttons()
+            pygame.display.flip()
