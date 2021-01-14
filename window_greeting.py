@@ -21,6 +21,18 @@ screen.blit(image, (0, 0))
 pygame.display.flip()
 clock = pygame.time.Clock()
 
+class GameState:
+    WINDOW_GREETING = 1
+    WINDOW_LOGIN = 2
+    WINDOW_SIGNIN = 3
+    WINDOW_MENU = 4
+    WINDOW_ACCOUNT = 5
+    WINDOW_GAME = 6
+    WINDOW_TABLE = 7
+    WINDOW_PAUSE = 8
+    WINDOW_GAME_INFO = 9
+    QUIT = 10
+
 
 class Button:
     pygame.init()
@@ -40,10 +52,13 @@ class Button:
         if x < self.mouse[0] < x + self.width and y < self.mouse[1] < y + self.heigth:
             pygame.draw.rect(screen, self.active_color, (x, y, self.width, self.heigth))
             pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
-            if self.click[0] is True and function is not None:
-                pygame.mixer.Sound.play(Button.button_sound)
-                pygame.time.delay(300)
-                function()
+            if self.click[0] is True:
+                if function is not None:
+                    pygame.mixer.Sound.play(Button.button_sound)
+                    pygame.time.delay(300)
+                    function()
+                else:
+                    return False
 
         else:
             pygame.draw.rect(screen, self.inactive_color, (x, y, self.width, self.heigth))
@@ -56,20 +71,20 @@ class Button:
 
 
 class Greeting:
-    pygame.font.init()
-    font = pygame.font.Font(config.FONT, 20)
-    font_header = pygame.font.Font(config.FONT, 110)
-
     def __init__(self):
-        self.text = self.font_header.render('BattleShip', True, [0, 0, 0])
-        self.text_2 = self.font_header.render('BattleShip', True, config.SILVER_COLOR)
-        screen.blit(self.text_2, (373, 25))
-        screen.blit(self.text, (370, 25))
-        self.buttons()
+        self.font = pygame.font.Font(config.FONT, 20)
+        self.font_header = pygame.font.Font(config.FONT, 110)
+        self.state = GameState.WINDOW_GREETING
+        self.draw()
 
-    def buttons(self):
+    def draw(self):
+        self.header = self.font_header.render('BattleShip', True, [0, 0, 0])
+        self.shadow_header = self.font_header.render('BattleShip', True, config.SILVER_COLOR)
+        screen.blit(self.shadow_header, (373, 25))
+        screen.blit(self.header, (370, 25))
+
         self.button_login = Button()
-        self.button_login.draw(500, 230, '< Log in >', self.login)
+        print(self.button_login.draw(500, 230, '< Log in >', self.login))
 
         self.button_signin = Button()
         self.button_signin.draw(500, 350, '< Sign in >', self.signin)
@@ -81,16 +96,13 @@ class Greeting:
         self.button_exit.draw(500, 590, '< Exit >', self.exit_game)
 
     def login(self):
-        pass  # class Login
+        self.state = GameState.WINDOW_LOGIN
 
     def signin(self):
-        pass  # class Signin
+        self.state = GameState.WINDOW_SIGNIN
 
     def gameinfo(self):
-        pass  # class Game Info
-
-    def help(self):
-        pass
+        self.state = GameState.WINDOW_GAME_INFO
 
     def exit_game(self):
         exit()
@@ -104,5 +116,5 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION or event.type == pygame.MOUSEBUTTONDOWN:
-                greeting.buttons()
+                greeting.draw()
         pygame.display.flip()

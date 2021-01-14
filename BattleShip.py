@@ -11,5 +11,7 @@ class GameState:
     WINDOW_GAME = 6
     WINDOW_TABLE = 7
     WINDOW_PAUSE = 8
+    WINDOW_GAME_INFO = 9
+    QUIT = 10
 
 
