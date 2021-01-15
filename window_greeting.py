@@ -8,6 +8,7 @@ from button_class import Button
 from window_gameinfo import main as info_main
 from window_login import main as login_main
 from window_signin import main as signin_main
+from window_menu import main as main_menu
 
 
 def load_image(name):
@@ -24,7 +25,6 @@ screen = pygame.display.set_mode(size)
 image = load_image(config.IMAGE_BACKGROUND)
 screen.blit(image, (0, 0))
 pygame.display.flip()
-clock = pygame.time.Clock()
 
 
 class Greeting:
@@ -63,9 +63,11 @@ class Greeting:
 
     def login(self):
         login_main()
+        main_menu()
 
     def signin(self):
         signin_main()
+        main_menu()
 
     def gameinfo(self):
         info_main()
@@ -87,6 +89,4 @@ def main():
                 greeting.move()
         greeting.draw()
         pygame.display.flip()
-
-
 main()
