@@ -68,7 +68,8 @@ class Menu:
         pass  # class High Score Table
 
     def logout(self):
-        pass  # class Greeting
+        global work
+        work = False
 
 
 def main():
