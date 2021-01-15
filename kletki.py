@@ -39,7 +39,7 @@ class Board:
             y += cell_size
 
     def title(self, x, y, n, type):
-        letters = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')
+        config.letters = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')
         color = (255, 255, 255)
         font = pygame.font.Font(None, 30)
         if type == 'number':
