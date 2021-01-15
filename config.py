@@ -43,3 +43,4 @@ coef = 3
 coeff = 5
 map_flag = True
 move_flag = True
+letters = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')
