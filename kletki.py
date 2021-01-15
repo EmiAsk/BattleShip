@@ -63,19 +63,9 @@ class Files:
         ships = []
         with open(file, 'r') as mapFile:
             ship = [line.strip().split() for line in mapFile]
-            if file == 'computer_ships.txt':
-                ship_map = []
-                for line in ship:
-                    if line != ['//']:
-                        ship_map.append(line)
-                    else:
-                        ship = ship_map
-                        break
             for line in ship:
                 elem = [int(x) for x in line]
                 ships.append(elem)
-        if file == 'computer_ships.txt':
-            self.write('computer_ships_game.txt', ships)
         return ships
 
     def write(self, file, ships):
@@ -275,7 +265,7 @@ class Play:
         self.color = 'white'
         self.files = Files()
         self.user_ships = self.files.read('user_ships.txt')
-        self.computer()
+        self.computer_ships = self.files.read('computer_ships_game.txt')
         self.ship = Ship()
         self.board = Board()
         self.boards()
@@ -305,13 +295,14 @@ class Play:
                                               self.height_btn), width=1)
 
     def count(self):
-        coef = 3
-        pygame.draw.rect(screen, self.color, (self.x_user_count, self.y_user_count, self.width_user_count,
-                                         self.height_user_count), width=1)
-        font = pygame.font.Font(None, 30)
-        text = font.render(f"{self.user_count}", True, self.color)
-        screen.blit(text, (self.x_user_count + coef, self.y_user_count + coef))
-        pygame.display.update()
+        pass
+       # coef = 3
+       # pygame.draw.rect(screen, self.color, (self.x_user_count, self.y_user_count, self.width_user_count,
+       #                                  self.height_user_count), width=1)
+       # font = pygame.font.Font(None, 30)
+        #text = font.render(f"{self.user_count}", True, self.color)
+       # screen.blit(text, (self.x_user_count + coef, self.y_user_count + coef))
+        #pygame.display.update()
 
     def move_user(self, x, y):
         global move_flag
@@ -328,10 +319,10 @@ class Play:
     def check(self, row, col):
         self.computer_ships = self.files.read('computer_ships_game.txt')
         if self.computer_ships[row][col] == 0:
-            self.computer_ships[row][col] = 2
+            self.computer_ships[row][col] = 3
             self.hp -= 0.1
         elif self.computer_ships[row][col] == 1:
-            self.computer_ships[row][col] = 2
+            self.computer_ships[row][col] = 6
             self.user_count = self.user_count + self.cnt * self.hp
             self.hp += 0.15
             try:
@@ -402,7 +393,7 @@ class Play:
         pygame.display.update()
 
     def board_u(self, row, col, cell_size, ship, row_1, col_1, ship_1):
-        self.ship = ship
+        self.ship = self.files.read('user_ships.txt')
         y = col
         for i in range(1, self.height + 1):
             x = row
@@ -424,16 +415,18 @@ class Play:
                     self.title(x - 25, y + 5, i, 'number')
                 x += cell_size
             y += cell_size
-        self.ship = ship_1
+        self.ship = self.files.read('computer_ships_game.txt')
         y_1 = col_1
         for i in range(1, self.height + 1):
             x_1 = row_1
             for j in range(self.width):
                 color = 'white'
                 width = 0
-                if self.ship[i - 1][j] == 0 or self.ship[i - 1][j] == 1:
+                if self.ship[i - 1][j] == 0:
                     width = 1
-                elif self.ship[i - 1][j] == 2:
+                if self.ship[i - 1][j] == 1:
+                    color = 'black'
+                elif self.ship[i - 1][j] == 2 or self.ship[i - 1][j] == 6:
                     color = 'red'
                 elif self.ship[i - 1][j] == 3:
                     color = 'grey'
