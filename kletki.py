@@ -39,20 +39,19 @@ class Board:
             y += cell_size
 
     def title(self, x, y, n, type):
-        letters = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')
         color = (255, 255, 255)
         font = pygame.font.Font(None, 30)
         if type == 'number':
             text = font.render(f"{n}", True, color)
         elif type == 'alpha':
-            text = font.render(f"{letters[n]}", True, color)
+            text = font.render(f"{config.letters[n]}", True, color)
         screen.blit(text, (x, y))
 
     def headline(self, x, y, text):
         color = 'white'
-        font = pygame.font.Font(None, 30)
+        font = pygame.font.Font(None, 40)
         text = font.render(text, True, color)
-        screen.blit(text, (x + 100, y - 80))
+        screen.blit(text, (x + 20, y - 80))
 
 
 # работа с файлами
@@ -105,10 +104,11 @@ class Ship:
         self.width_btn, self.height_btn = 100, 40
 
     def render(self, screen):
+        screen.fill(config.SCREEN_COLOR)
         self.buttons()
         board = Board()
         board.board(self.left, self.top, self.cell_size, self.board)
-        board.headline(self.left, self.top, 'you')
+        board.headline(self.left, self.top, 'Arrange your ships!')
         pygame.display.flip()
 
     def ship(self, x, y):
@@ -127,6 +127,12 @@ class Ship:
         x, y, width, height = 20, 550, 40, 40
         pygame.draw.rect(screen, color, (x, y, width, height), width=1)
         pygame.draw.rect(screen, color, (self.x_btn, self.y_btn, self.width_btn, self.height_btn), width=1)
+        font = pygame.font.Font(None, 60)
+        text = font.render('?', True, color)
+        screen.blit(text, (x + 10, y + 3))
+        font = pygame.font.Font(None, 30)
+        text = font.render('Save', True, color)
+        screen.blit(text, (self.x_btn + 25, self.y_btn + 10))
 
     def check(self, x, y):
         flag = True
@@ -182,6 +188,7 @@ class Ship:
                 files = Files()
                 files.write('user_ships.txt', self.board)
             if flag is False:
+                pass
                 ErrorForm()
             return flag
 
@@ -270,14 +277,15 @@ class Ship:
 # сама игра
 class Play:
     def __init__(self):
+        screen.fill(config.SCREEN_COLOR)
         self.width = self.height = 10
         self.left, self.top = 70, 150
         self.left_2 = 430
         self.cell_size = 30
         self.x_btn_pause, self.y_btn_pause, self.width_btn_pause, self.height_btn_pause = 20, 550, 40, 40
-        self.x_btn, self.y_btn, self.width_btn, self.height_btn = 345, 550, 60, 40
+        self.x_btn, self.y_btn, self.width_btn, self.height_btn = 345, 550, 125, 40
         self.x_user_count, self.y_user_count, self.width_user_count, self.height_user_count = 700, 50, 60, 40
-        self.cnt, self.hp = 20, 1
+        self.user_count, self.cnt = 0, 20
         self.color = 'white'
         self.files = Files()
         self.user_ships = self.files.read('user_ships.txt')
@@ -286,36 +294,43 @@ class Play:
         self.board = Board()
         self.boards()
         self.buttons()
-        self.count()
+        self.title()
 
     def boards(self):
-        pygame.draw.rect(screen, (166, 120, 65), (30, 30, 740, 545), 0)
         board = Board()
         board.board(self.left, self.top, self.cell_size, self.user_ships)
         self.board_game(self.left_2, self.top, self.cell_size)
-        board.headline(self.left, self.top, 'you')
-        board.headline(self.left_2, self.top, 'computer')
-        self.buttons()
+        board.headline(self.left + 40, self.top, 'you')
+        board.headline(self.left_2 + 30, self.top, 'computer')
         self.count()
-        pygame.display.update()
+
+    def title(self):
+        color = 'white'
+        font = pygame.font.Font(None, 40)
+        text = font.render(config.TITLE_TEXT_1, True, color)
+        screen.blit(text, config.TITLE_SIZE)
+        font = pygame.font.Font(None, 20)
+        text = font.render('score', True, color)
+        screen.blit(text, (self.x_user_count + config.coef, self.y_user_count - 2 * config.coef,))
 
     def buttons(self):
-        pygame.draw.rect(screen, (166, 120, 65), (30, 30, 740, 30), 0)
         pygame.draw.rect(screen, self.color, (self.x_btn_pause, self.y_btn_pause, self.width_btn_pause,
                                          self.height_btn_pause), width=1)
-        font = pygame.font.Font(None, 30)
+        font = pygame.font.Font(None, 60)
         text = font.render(f"?", True, self.color)
         screen.blit(text, (self.x_btn_pause + config.coef, self.y_btn_pause + config.coef))
         pygame.draw.rect(screen, self.color, (self.x_btn, self.y_btn, self.width_btn,
                                               self.height_btn), width=1)
+        font = pygame.font.Font(None, 30)
+        text = font.render(f"{config.TEXT_MOVE}", True, self.color)
+        screen.blit(text, (self.x_btn + config.coef, self.y_btn + config.coef))
 
     def count(self):
-        pygame.draw.rect(screen, (166, 120, 65), (30, 30, 740, 10), 0)
-        pygame.draw.rect(screen, self.color, (self.x_user_count, self.y_user_count, self.width_user_count,
-                                  self.height_user_count), width=1)
         font = pygame.font.Font(None, 30)
         text = font.render(f"{config.USER_COUNT}", True, self.color)
-        screen.blit(text, (self.x_user_count + config.coef, self.y_user_count + config.coef))
+        screen_1.blit(text, (self.x_user_count + config.coef, self.y_user_count + config.coef))
+        pygame.draw.rect(screen_1, self.color, (self.x_user_count, self.y_user_count, self.width_user_count,
+                                                self.height_user_count), width=1)
 
     def move_user(self, x, y):
         if self.left_2 + self.cell_size * 10 >= x >= self.left_2:
@@ -324,18 +339,22 @@ class Play:
                 col = (x - self.left_2) // self.cell_size
                 if row < 10 and col < 10:
                     self.check(row, col)
+                    config.TITLE_TEXT_1, config.TITLE_TEXT_2 = config.TITLE_TEXT_2, config.TITLE_TEXT_1
+                    screen.fill(config.SCREEN_COLOR, config.SIZE_TEXT)
+                    self.title()
                     return True
 
     def check(self, row, col):
         if self.computer_ships[row][col] == 0:
             self.computer_ships[row][col] = 3
-            self.hp -= 0.1
+            config.HP -= 0.1
         elif self.computer_ships[row][col] == 1:
             self.computer_ships[row][col] = 6
-            self.hp += 0.15
+            config.USER_COUNT = config.USER_COUNT + int(self.cnt * config.HP)
+            config.HP += 0.25
             self.check_ship_computer(row, col, self.computer_ships)
-            config.USER_COUNT = int(config.USER_COUNT) + self.cnt * self.hp
         self.files.write('computer_ships_game.txt', self.computer_ships)
+        screen_1.fill(config.SCREEN_COLOR, (self.x_user_count, self.y_user_count, self.width_user_count, self.height_user_count))
         self.count()
 
     def move_computer(self, x_mouse, y_mouse):
@@ -346,12 +365,17 @@ class Play:
         while flag:
             x = random.randint(0, 9)
             y = random.randint(0, 9)
-            if [x, y] not in config.ship:
+            if [x, y] not in config.ship and len(config.ship) < 90:
                 config.ship.append([x, y])
-                config.ship.append([x + 1, y + 1])
-                config.ship.append([x + 1, y - 1])
-                config.ship.append([x - 1, y + 1])
-                config.ship.append([x - 1, y - 1])
+            if x != 0 and y != 0 and x != 9 and y != 9 and len(config.ship) < 90:
+                if [x + 1, y + 1] not in config.ship:
+                    config.ship.append([x + 1, y + 1])
+                if [x + 1, y - 1] not in config.ship:
+                    config.ship.append([x + 1, y - 1])
+                if [x - 1, y + 1] not in config.ship:
+                    config.ship.append([x - 1, y + 1])
+                if [x - 1, y - 1] not in config.ship:
+                    config.ship.append([x - 1, y - 1])
                 break
         if flag:
             if self.user_ships[x][y] == 0:
@@ -363,6 +387,9 @@ class Play:
                 self.user_ships[x][y] = 3
                 self.check_ship_computer(x, y, self.user_ships)
             self.files.write('user_ships.txt', self.user_ships)
+            config.TITLE_TEXT_1, config.TITLE_TEXT_2 = config.TITLE_TEXT_2, config.TITLE_TEXT_1
+            screen.fill(config.SCREEN_COLOR, config.SIZE_TEXT)
+            self.title()
             return True
 
     def check_ship_computer(self, i, j, ship_color):
@@ -439,42 +466,24 @@ class Play:
                 x += cell_size
             y += cell_size
 
-def load_image(name, colorkey=None):
-    from os import path
-    fullname = path.join(name)
-    if not path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
-    image = pygame.image.load(fullname)
-    if colorkey is not None:
-        image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    return image
 
 if __name__ == '__main__':
     pygame.init()
     pygame.display.set_caption('BattleShip')
     size = width, height = 800, 600
-    screen_2 = pygame.display.set_mode(size)
+    screen = pygame.display.set_mode(size)
+    screen.fill(config.SCREEN_COLOR)
     screen_1 = pygame.display.set_mode(size)
+    screen_1.fill(config.SCREEN_COLOR)
     pygame.display.flip()
     ship = Ship()
     running = True
     game = False
     check = True
-    image = load_image(config.IMAGE_BACKGROUND)
-
-    screen = pygame.display.set_mode(size)
-    screen.blit(image, (0, 0))
-    play = Play()
-    pygame.draw.rect(screen, (166, 120, 65), (30, 30, 740, 545), 0)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        #screen.fill((0, 0, 0))
         ship.render(screen)
         running = False
 
@@ -493,12 +502,13 @@ if __name__ == '__main__':
                     ship.ship(x_mouse, y_mouse)
                     flag = ship.check(x_mouse, y_mouse)
                     if flag:
-
+                        play = Play()
                         play.boards()
                         flag = False
                         check = False
                         game = True
                 if game:
+                    screen.fill(config.SCREEN_COLOR)
                     play = Play()
                     if config.move_flag:
                         if play.move_user(x_mouse, y_mouse):
