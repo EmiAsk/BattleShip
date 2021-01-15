@@ -1,6 +1,9 @@
 import sys
 import pygame
-import time
+import random
+import config
+
+from error_main import ErrorForm
 
 pygame.font.init()
 
@@ -11,21 +14,23 @@ class Board:
         self.ship = []
         self.height = self.width = 10
 
-    def board(self, row, col, cell_size, file, color='white'):
-        if file is None:
-            self.ship = [[0] * self.width for _ in range(height)]
-        else:
-            files = Files()
-            self.ship = files.read(file)
+    def board(self, row, col, cell_size, ship):
+        self.ship = ship
         y = col
         for i in range(1, self.height + 1):
             x = row
             for j in range(self.width):
-                if self.ship[i - 1][j] == 1:
-                    width = 0
-                else:
+                color = 'white'
+                width = 0
+                if self.ship[i - 1][j] == 0:
                     width = 1
+                elif self.ship[i - 1][j] == 2:
+                    color = 'red'
+                elif self.ship[i - 1][j] == 3:
+                    color = 'grey'
                 pygame.draw.rect(screen, color, (x, y, cell_size, cell_size), width=width)
+                pygame.draw.rect(screen, 'white', (x, y, cell_size, cell_size), width=1)
+
                 if i == 1:
                     self.title(x + 10, y - 22, j, 'alpha')
                 if j == 0:
@@ -50,9 +55,27 @@ class Board:
         screen.blit(text, (x + 100, y - 80))
 
 
+# работа с файлами
 class Files:
     def __init__(self):
         self.width = self.height = 10
+        if config.map_flag:
+            self.read_computer_map()
+
+    def read_computer_map(self):
+        with open('computer_ships.txt', 'r') as mapFile:
+            ships = []
+            all_map = []
+            ship = [line.strip().split() for line in mapFile]
+            for line in ship:
+                if line != ['//']:
+                    line = [int(x) for x in line]
+                    ships.append(line)
+                else:
+                    ships = []
+                    all_map.append(ships)
+            self.write('computer_ships_game.txt', random.choice(all_map))
+            config.map_flag = False
 
     def read(self, file):
         ships = []
@@ -82,30 +105,28 @@ class Ship:
         self.width_btn, self.height_btn = 100, 40
 
     def render(self, screen):
-        screen.fill((0, 0, 0))
         self.buttons()
         board = Board()
-        board.board(self.left, self.top, self.cell_size, 'user_ships.txt')
+        board.board(self.left, self.top, self.cell_size, self.board)
         board.headline(self.left, self.top, 'you')
+        pygame.display.flip()
 
     def ship(self, x, y):
         if self.left + self.cell_size * 10 >= x >= self.left:
             if self.top + self.cell_size * 10 >= y >= self.top:
                 row = (y - self.top) // self.cell_size
                 col = (x - self.left) // self.cell_size
-                self.board[row][col] ^= 1
-                files = Files()
-                files.write('user_ships.txt', self.board)
-                self.render(screen)
-                pygame.display.flip()
+                if row < 10 and col < 10:
+                    self.board[row][col] ^= 1
+                    files = Files()
+                    files.write('user_ships.txt', self.board)
+                    self.render(screen)
 
     def buttons(self):
         color = 'white'
         x, y, width, height = 20, 550, 40, 40
         pygame.draw.rect(screen, color, (x, y, width, height), width=1)
         pygame.draw.rect(screen, color, (self.x_btn, self.y_btn, self.width_btn, self.height_btn), width=1)
-
-        pygame.display.update()
 
     def check(self, x, y):
         flag = True
@@ -160,6 +181,8 @@ class Ship:
             if flag:
                 files = Files()
                 files.write('user_ships.txt', self.board)
+            if flag is False:
+                ErrorForm()
             return flag
 
     def check_ship(self, i, j):
@@ -247,79 +270,240 @@ class Ship:
 # сама игра
 class Play:
     def __init__(self):
-        screen.fill((0, 0, 0))
         self.width = self.height = 10
         self.left, self.top = 70, 150
         self.left_2 = 430
         self.cell_size = 30
         self.x_btn_pause, self.y_btn_pause, self.width_btn_pause, self.height_btn_pause = 20, 550, 40, 40
+        self.x_btn, self.y_btn, self.width_btn, self.height_btn = 345, 550, 60, 40
         self.x_user_count, self.y_user_count, self.width_user_count, self.height_user_count = 700, 50, 60, 40
-        self.x_time, self.y_time, self.width_time, self.height_time = 700, 550, 70, 40
-        self.user_count = 0
+        self.cnt, self.hp = 20, 1
         self.color = 'white'
+        self.files = Files()
+        self.user_ships = self.files.read('user_ships.txt')
+        self.computer_ships = self.files.read('computer_ships_game.txt')
+        self.ship = Ship()
+        self.board = Board()
+        self.boards()
+        self.buttons()
+        self.count()
 
     def boards(self):
+        pygame.draw.rect(screen, (166, 120, 65), (30, 30, 740, 545), 0)
         board = Board()
-        board.board(self.left, self.top, self.cell_size, 'user_ships.txt')
-        board.board(self.left_2, self.top, self.cell_size, None)
+        board.board(self.left, self.top, self.cell_size, self.user_ships)
+        self.board_game(self.left_2, self.top, self.cell_size)
         board.headline(self.left, self.top, 'you')
         board.headline(self.left_2, self.top, 'computer')
         self.buttons()
         self.count()
-        self.time()
         pygame.display.update()
 
     def buttons(self):
-        coef = 5
+        pygame.draw.rect(screen, (166, 120, 65), (30, 30, 740, 30), 0)
         pygame.draw.rect(screen, self.color, (self.x_btn_pause, self.y_btn_pause, self.width_btn_pause,
                                          self.height_btn_pause), width=1)
         font = pygame.font.Font(None, 30)
         text = font.render(f"?", True, self.color)
-        screen.blit(text, (self.x_btn_pause + coef, self.y_btn_pause + coef))
+        screen.blit(text, (self.x_btn_pause + config.coef, self.y_btn_pause + config.coef))
+        pygame.draw.rect(screen, self.color, (self.x_btn, self.y_btn, self.width_btn,
+                                              self.height_btn), width=1)
 
     def count(self):
-        coef = 3
+        pygame.draw.rect(screen, (166, 120, 65), (30, 30, 740, 10), 0)
         pygame.draw.rect(screen, self.color, (self.x_user_count, self.y_user_count, self.width_user_count,
-                                         self.height_user_count), width=1)
+                                  self.height_user_count), width=1)
         font = pygame.font.Font(None, 30)
-        text = font.render(f"{self.user_count}", True, self.color)
-        screen.blit(text, (self.x_user_count + coef, self.y_user_count + coef))
+        text = font.render(f"{config.USER_COUNT}", True, self.color)
+        screen.blit(text, (self.x_user_count + config.coef, self.y_user_count + config.coef))
 
-    def time(self):
-        coef = 5
-        pygame.draw.rect(screen, self.color, (self.x_time, self.y_time, self.width_time, self.height_time), width=1)
-        font = pygame.font.Font(None, 30)
-        #text = font.render(time.strftime('%M:%S', tuple(time.clock())), True, self.color)
-        #screen.blit(text, (self.x_user_count + coef, self.y_user_count + coef))
+    def move_user(self, x, y):
+        if self.left_2 + self.cell_size * 10 >= x >= self.left_2:
+            if self.top + self.cell_size * 10 >= y >= self.top:
+                row = (y - self.top) // self.cell_size
+                col = (x - self.left_2) // self.cell_size
+                if row < 10 and col < 10:
+                    self.check(row, col)
+                    return True
 
+    def check(self, row, col):
+        if self.computer_ships[row][col] == 0:
+            self.computer_ships[row][col] = 3
+            self.hp -= 0.1
+        elif self.computer_ships[row][col] == 1:
+            self.computer_ships[row][col] = 6
+            self.hp += 0.15
+            self.check_ship_computer(row, col, self.computer_ships)
+            config.USER_COUNT = int(config.USER_COUNT) + self.cnt * self.hp
+        self.files.write('computer_ships_game.txt', self.computer_ships)
+        self.count()
+
+    def move_computer(self, x_mouse, y_mouse):
+        flag = False
+        if self.x_btn + self.cell_size * 10 >= x_mouse >= self.x_btn:
+            if self.y_btn + self.cell_size * 10 >= y_mouse >= self.y_btn:
+                flag = True
+        while flag:
+            x = random.randint(0, 9)
+            y = random.randint(0, 9)
+            if [x, y] not in config.ship:
+                config.ship.append([x, y])
+                config.ship.append([x + 1, y + 1])
+                config.ship.append([x + 1, y - 1])
+                config.ship.append([x - 1, y + 1])
+                config.ship.append([x - 1, y - 1])
+                break
+        if flag:
+            if self.user_ships[x][y] == 0:
+                self.user_ships[x][y] = 3
+            elif self.user_ships[x][y] == 1:
+                self.user_ships[x][y] = 2
+                self.check_ship_computer(x, y, self.user_ships)
+            if self.ship.check_ship(x, y)[0] == 0:
+                self.user_ships[x][y] = 3
+                self.check_ship_computer(x, y, self.user_ships)
+            self.files.write('user_ships.txt', self.user_ships)
+            return True
+
+    def check_ship_computer(self, i, j, ship_color):
+        if i == 0 and j == 0:
+            ship_color[i + 1][j + 1] = 3
+        elif i == 0 and j == 9:
+            ship_color[i + 1][j - 1] == 3
+        elif i == 9 and j == 0:
+            ship_color[i - 1][j + 1] = 3
+        elif i == 9 and j == 9:
+            ship_color[i - 1][j - 1] = 3
+        elif i == 0:
+            ship_color[i + 1][j - 1] = 3
+            ship_color[i + 1][j + 1] = 3
+        elif i == 9:
+            ship_color[i - 1][j - 1] = 3
+            ship_color[i - 1][j + 1] = 3
+        elif j == 0:
+            ship_color[i + 1][j + 1] = 3
+            ship_color[i - 1][j + 1] = 3
+        elif j == 9:
+            ship_color[i + 1][j - 1] = 3
+            ship_color[i - 1][j - 1] = 3
+        else:
+            ship_color[i + 1][j + 1] = 3
+            ship_color[i + 1][j - 1] = 3
+            ship_color[i - 1][j + 1] = 3
+            ship_color[i - 1][j - 1] = 3
+
+    def win(self):
+        win_user = win_computer = True
+        for elem in self.user_ships:
+            if 1 in elem:
+                win_computer = False
+        for elem in self.computer_ships:
+            if 1 in elem:
+                win_user = False
+        return win_user, win_computer
+
+    def move(self):
+        self.board.board(self.left, self.top, self.cell_size, self.files.read('user_ships.txt'))
+        self.board_game(self.left_2, self.top, self.cell_size)
+        if self.win()[0]:
+            return False, 'user'
+        if self.win()[1]:
+            return False, 'computer'
+        pygame.display.update()
+        return True
+
+    def board_game(self, row, col, cell_size):
+        self.ships = self.files.read('computer_ships_game.txt')
+        y = col
+        for i in range(1, self.height + 1):
+            x = row
+            for j in range(self.width):
+                color = 'white'
+                width = 0
+                if self.ships[i - 1][j] == 0:
+                    width = 1
+                if self.ships[i - 1][j] == 1:
+                    width = 1
+                elif self.ships[i - 1][j] == 2:
+                    color = 'red'
+                elif self.ships[i - 1][j] == 6:
+                    color = 'white'
+                elif self.ships[i - 1][j] == 3:
+                    color = 'grey'
+                pygame.draw.rect(screen_1, color, (x, y, cell_size, cell_size), width=width)
+                pygame.draw.rect(screen_1, self.color, (x, y, cell_size, cell_size), width=1)
+                if i == 1:
+                    self.board.title(x + 10, y - 22, j, 'alpha')
+                if j == 0:
+                    self.board.title(x - 25, y + 5, i, 'number')
+                x += cell_size
+            y += cell_size
+
+def load_image(name, colorkey=None):
+    from os import path
+    fullname = path.join(name)
+    if not path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+    if colorkey is not None:
+        image = image.convert()
+        if colorkey == -1:
+            colorkey = image.get_at((0, 0))
+        image.set_colorkey(colorkey)
+    return image
 
 if __name__ == '__main__':
     pygame.init()
     pygame.display.set_caption('BattleShip')
     size = width, height = 800, 600
-    screen = pygame.display.set_mode(size)
-    screen.fill((0, 0, 0))
+    screen_2 = pygame.display.set_mode(size)
+    screen_1 = pygame.display.set_mode(size)
     pygame.display.flip()
     ship = Ship()
     running = True
+    game = False
+    check = True
+    image = load_image(config.IMAGE_BACKGROUND)
+
+    screen = pygame.display.set_mode(size)
+    screen.blit(image, (0, 0))
+    play = Play()
+    pygame.draw.rect(screen, (166, 120, 65), (30, 30, 740, 545), 0)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        screen.fill((0, 0, 0))
+        #screen.fill((0, 0, 0))
         ship.render(screen)
         running = False
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                open('computer_ships_game.txt', 'w').close()
+                open('user_ships.txt', 'w').close()
+                files = Files()
+                files.write('user_ships.txt', [[0] * 10 for _ in range(10)])
                 pygame.quit()
                 sys.exit(0)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x_mouse, y_mouse = pygame.mouse.get_pos()
-                ship.ship(x_mouse, y_mouse)
-                flag = ship.check(x_mouse, y_mouse)
-                if flag:
+                if check:
+                    ship.ship(x_mouse, y_mouse)
+                    flag = ship.check(x_mouse, y_mouse)
+                    if flag:
+
+                        play.boards()
+                        flag = False
+                        check = False
+                        game = True
+                if game:
                     play = Play()
-                    play.boards()
-                    flag = False
+                    if config.move_flag:
+                        if play.move_user(x_mouse, y_mouse):
+                            config.move_flag = False
+                    else:
+                        if play.move_computer(x_mouse, y_mouse):
+                            config.move_flag = True
+                    game = play.move()
