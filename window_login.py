@@ -106,6 +106,7 @@ class Login:
                               width=5)
             user_password = cursor.execute('SELECT password FROM users WHERE name == ?',
                                            (self.finally_name,)).fetchone()[0]
+            config.USER_NAME = self.finally_name
             connect.close()
             from hashlib import sha512
             password = sha512(self.finally_password.encode()).hexdigest()

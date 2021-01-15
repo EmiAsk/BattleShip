@@ -109,6 +109,7 @@ class Login:
             users(name, password, all_games, wins, lose)
             VALUES("{self.finally_name}", "{self.finally_password}", "0", "0", "0") ''')
                 connect.commit()
+                config.USER_NAME = self.finally_name
             except sqlite3.IntegrityError:
                 pass
             connect.close()

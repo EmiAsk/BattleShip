@@ -5,6 +5,8 @@ BUTTON_SOUND = 'click_button.wav'
 SILVER_COLOR = '#c0c0c0'
 DARK_SILVER_COLOR = '#a6a6a6'
 
+USER_NAME = None
+
 TABLE_HEADERS = ['name', 'games', 'wins', ' lose', 'score']
 
 LETTERS_GAME = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
@@ -37,3 +39,11 @@ There can be three results:
 If the player misses, he passes the move to the enemy, but if he
 wounded or killed the ship, he has the right to continue firing until
 the first miss. All actions are marked on the cell field.'''}
+
+ship = []
+coef = 3
+coeff = 5
+map_flag = True
+move_flag = True
+letters = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')
+USER_COUNT = 0

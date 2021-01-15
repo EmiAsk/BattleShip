@@ -72,39 +72,44 @@ class Account:
         self.header = self.font_header.render('Personal Account', True, [0, 0, 0])
         self.picture_user = load_image('user.png')
         screen.blit(self.header, (190, 40))
-        #screen.blit(self.picture_user, (100, 200))
+        screen.blit(self.picture_user, (120, 200))
 
-        self.name_text = self.font.render(f'Name: {data[0]}', True, [0, 0, 0])
-        self.reg_text = self.font.render(f'Date of registration: {data[1]}', True, [0, 0, 0])
+        self.name_text = self.font.render(f'Name: {config.USER_NAME}', True, [0, 0, 0])
         pygame.draw.line(screen, 'black', (300, 250), (510, 250), 3)
         screen.blit(self.name_text, (300, 200))
-        screen.blit(self.reg_text, (300, 270))
 
-        self.stat_text = self.font.render('--- Information about games ---', True, [0, 0, 0])
-        screen.blit(self.stat_text, (250, 380))
+        try:
+            self.stat_text = self.font.render('--- Information about games ---', True, [0, 0, 0])
+            screen.blit(self.stat_text, (250, 380))
 
-        self.status_text = self.font.render(f'Player level: {data[2]}', True, [0, 0, 0])
-        screen.blit(self.status_text, (100, 450))
+            self.status_text = self.font.render(f'Player level: {data[0]}', True, [0, 0, 0])
+            screen.blit(self.status_text, (100, 450))
 
-        self.games = self.font.render(f'All games: {data[4]}', True, [0, 0, 0])
-        screen.blit(self.games, (100, 500))
+            self.games = self.font.render(f'All games: {data[1]}', True, [0, 0, 0])
+            screen.blit(self.games, (100, 500))
 
-        self.wins = self.font.render(f'Wins: {data[5]}', True, [0, 0, 0])
-        screen.blit(self.wins, (100, 550))
+            self.wins = self.font.render(f'Wins: {data[2]}', True, [0, 0, 0])
+            screen.blit(self.wins, (100, 550))
 
-        self.lose = self.font.render(f'Lose: {data[-1]}', True, [0, 0, 0])
-        screen.blit(self.lose, (100, 600))
+            self.lose = self.font.render(f'Lose: {data[-1]}', True, [0, 0, 0])
+            screen.blit(self.lose, (100, 600))
+        except TypeError:
+            print('ERROR 02: Incorrect data entered.')
 
         pygame.draw.rect(screen, 'black', (80, 180, 750, 170), 2)
 
-    def data_table(self, value=1):
+    def data_table(self):
         self.con = sqlite3.connect('battleship.db')
         self.cur = self.con.cursor()
-        values = (value,)
-        result = self.cur.execute('SELECT name, date_of_registration, player_level, all_games, wins, lose FROM users WHERE id = ?', values).fetchall()
-        self.con.close()
-        for elem in result:
-            return elem
+        try:
+            result = self.cur.execute(
+                'SELECT player_level, all_games, wins, lose FROM users WHERE name = ?',
+                (config.USER_NAME,)).fetchall()
+            self.con.close()
+            for elem in result:
+                return elem
+        except TypeError:
+            print('ERROR 02: Incorrect data entered.')
 
     def buttons(self):
         self.button = Button(230, 50)
