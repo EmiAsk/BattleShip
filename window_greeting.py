@@ -1,9 +1,14 @@
 import pygame
-from sys import exit
 import config
 
+from sys import exit
 from os import path
-import window_gameinfo
+from button_class import Button
+
+from window_gameinfo import main as info_main
+from window_login import main as login_main
+from window_signin import main as signin_main
+
 
 def load_image(name):
     if not path.isfile(path.join(name)):
@@ -22,74 +27,48 @@ pygame.display.flip()
 clock = pygame.time.Clock()
 
 
-class Button:
-    pygame.init()
-    button_sound = pygame.mixer.Sound(config.BUTTON_SOUND)
-    font = pygame.font.Font(config.FONT, 22)
-
-    def __init__(self, width=350, height=50):
-        self.width = width
-        self.heigth = height
-        self.inactive_color = config.SILVER_COLOR
-        self.active_color = config.DARK_SILVER_COLOR
-
-    def draw(self, x, y, message, function=None):
-        self.mouse = pygame.mouse.get_pos()
-        self.click = pygame.mouse.get_pressed(3)
-
-        if x < self.mouse[0] < x + self.width and y < self.mouse[1] < y + self.heigth:
-            pygame.draw.rect(screen, self.active_color, (x, y, self.width, self.heigth))
-            pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
-            if self.click[0] is True:
-                if function is not None:
-                    pygame.mixer.Sound.play(Button.button_sound)
-                    pygame.time.delay(300)
-                    function()
-                else:
-                    return False
-
-        else:
-            pygame.draw.rect(screen, self.inactive_color, (x, y, self.width, self.heigth))
-            pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
-        self.print_text(message, x + 20, y + 10)
-
-    def print_text(self, message, x, y):
-        self.text = self.font.render(message, True, [0, 0, 0])
-        screen.blit(self.text, (x, y))
-
-
 class Greeting:
     def __init__(self):
+        self.button_login = Button()
+        self.button_signin = Button()
+        self.button_gameinfo = Button()
+        self.button_exit = Button()
         self.font = pygame.font.Font(config.FONT, 20)
         self.font_header = pygame.font.Font(config.FONT, 110)
         self.draw()
 
+    def press(self):
+        self.button_login.press(500, 230, self.login)
+        self.button_signin.press(500, 350, self.signin)
+        self.button_gameinfo.press(500, 470, self.gameinfo)
+        self.button_exit.press(500, 590, self.exit_game)
+
+    def move(self):
+        self.button_login.move(500, 230)
+        self.button_signin.move(500, 350)
+        self.button_gameinfo.move(500, 470)
+        self.button_exit.move(500, 590)
+
     def draw(self):
+        screen.blit(image, (0, 0))
         self.header = self.font_header.render('BattleShip', True, [0, 0, 0])
         self.shadow_header = self.font_header.render('BattleShip', True, config.SILVER_COLOR)
         screen.blit(self.shadow_header, (373, 25))
         screen.blit(self.header, (370, 25))
 
-        self.button_login = Button()
-        self.button_login.draw(500, 230, '< Log in >', self.login)
-
-        self.button_signin = Button()
-        self.button_signin.draw(500, 350, '< Sign in >', self.signin)
-
-        self.button_gameinfo = Button()
-        self.button_gameinfo.draw(500, 470, '< Game Info >', self.gameinfo)
-
-        self.button_exit = Button()
-        self.button_exit.draw(500, 590, '< Exit >', self.exit_game)
+        self.button_login.draw(500, 230, '< Log in >')
+        self.button_signin.draw(500, 350, '< Sign in >')
+        self.button_gameinfo.draw(500, 470, '< Game Info >')
+        self.button_exit.draw(500, 590, '< Exit >')
 
     def login(self):
-        window_login.main()
+        login_main()
 
     def signin(self):
-        window_signin.main()
+        signin_main()
 
     def gameinfo(self):
-        window_gameinfo.main()
+        info_main()
 
     def exit_game(self):
         exit()
@@ -102,7 +81,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 work = False
-            if event.type in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION):
-                greeting.draw()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                greeting.press()
+            if event.type == pygame.MOUSEMOTION:
+                greeting.move()
+        greeting.draw()
         pygame.display.flip()
+
+
 main()
