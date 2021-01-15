@@ -37,3 +37,9 @@ There can be three results:
 If the player misses, he passes the move to the enemy, but if he
 wounded or killed the ship, he has the right to continue firing until
 the first miss. All actions are marked on the cell field.'''}
+
+ship = []
+coef = 3
+coeff = 5
+map_flag = True
+move_flag = True
