@@ -84,7 +84,7 @@ class GameInfo:
         self.button_to_menu.draw(330, 710, '  < Back to menu >', self.to_menu)
 
     def to_menu(self):
-        pass  # class Menu
+        main.work = False
 
     def further(self):
         if self.page < len(self.pages) - 1:
@@ -137,7 +137,8 @@ def main():
     while work:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                work = False
+                return
             if event.type in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION):
                 gameinfo.buttons()
             pygame.display.flip()
+    print(1)

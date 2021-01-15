@@ -3,7 +3,7 @@ from sys import exit
 import config
 
 from os import path
-
+import window_gameinfo
 
 def load_image(name):
     if not path.isfile(path.join(name)):
@@ -105,3 +105,4 @@ def main():
             if event.type in (pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION):
                 greeting.draw()
         pygame.display.flip()
+main()
