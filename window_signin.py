@@ -52,6 +52,7 @@ class Signin(UserData):
             except AttributeError:
                 pass
             connect.close()
+            return True
 
 def main():
     global work

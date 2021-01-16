@@ -5,6 +5,7 @@ from sys import exit
 from os import path
 
 from button_class import Button
+from window_account import main as main_account
 
 
 def load_image(name):
@@ -59,7 +60,7 @@ class Menu:
         self.logout_button.draw(500, 590, '< Logout >', self.logout)
 
     def opening_an_account(self):
-        pass  # class Account
+        main_account()
 
     def turning_on_the_game(self):
         pass  # class game BattleShip

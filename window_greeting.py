@@ -63,11 +63,13 @@ class Greeting:
 
     def login(self):
         login_main()
-        main_menu()
+        if login_main():
+            main_menu()
 
     def signin(self):
         signin_main()
-        main_menu()
+        if signin_main():
+            main_menu()
 
     def gameinfo(self):
         info_main()

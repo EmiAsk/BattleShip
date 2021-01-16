@@ -5,7 +5,6 @@ import sqlite3
 
 from os import path
 
-from button_class import Button
 from user_data_class import UserData
 
 def load_image(name):
@@ -30,6 +29,7 @@ class Login(UserData):
         connect = sqlite3.connect('battleship.db')
         cursor = connect.cursor()
         self.usernames = cursor.execute('SELECT name FROM users').fetchall()
+        self.finally_name not in self.usernames
         self.usernames = [name[0] for name in self.usernames]
         if self.finally_name not in self.usernames:
             print('ERROR 02: Incorrect data entered')
@@ -49,6 +49,9 @@ class Login(UserData):
             password = sha512(self.finally_password.encode()).hexdigest()
             if password != user_password:
                 print('ERROR 02: Incorrect data entered.')
+            else:
+                return True
+
 
 def main():
     global work
