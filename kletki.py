@@ -300,8 +300,8 @@ class Play:
         board = Board()
         board.board(self.left, self.top, self.cell_size, self.user_ships)
         self.board_game(self.left_2, self.top, self.cell_size)
-        board.headline(self.left + 40, self.top, 'you')
-        board.headline(self.left_2 + 30, self.top, 'computer')
+        board.headline(self.left + 90, self.top, 'you')
+        board.headline(self.left_2 + 60, self.top, 'computer')
         self.count()
 
     def title(self):
@@ -331,7 +331,8 @@ class Play:
         screen_1.blit(text, (self.x_user_count + config.coef, self.y_user_count + config.coef))
         pygame.draw.rect(screen_1, self.color, (self.x_user_count, self.y_user_count, self.width_user_count,
                                                 self.height_user_count), width=1)
-
+        
+# ход игрока
     def move_user(self, x, y):
         if self.left_2 + self.cell_size * 10 >= x >= self.left_2:
             if self.top + self.cell_size * 10 >= y >= self.top:
@@ -357,35 +358,46 @@ class Play:
         screen_1.fill(config.SCREEN_COLOR, (self.x_user_count, self.y_user_count, self.width_user_count, self.height_user_count))
         self.count()
 
+# ход компьютера
     def move_computer(self, x_mouse, y_mouse):
         flag = False
+        count = 0
         if self.x_btn + self.cell_size * 10 >= x_mouse >= self.x_btn:
             if self.y_btn + self.cell_size * 10 >= y_mouse >= self.y_btn:
                 flag = True
         while flag:
-            x = random.randint(0, 9)
-            y = random.randint(0, 9)
-            if [x, y] not in config.ship and len(config.ship) < 90:
-                config.ship.append([x, y])
-            if x != 0 and y != 0 and x != 9 and y != 9 and len(config.ship) < 90:
-                if [x + 1, y + 1] not in config.ship:
-                    config.ship.append([x + 1, y + 1])
-                if [x + 1, y - 1] not in config.ship:
-                    config.ship.append([x + 1, y - 1])
-                if [x - 1, y + 1] not in config.ship:
-                    config.ship.append([x - 1, y + 1])
-                if [x - 1, y - 1] not in config.ship:
-                    config.ship.append([x - 1, y - 1])
+            count += 1
+            if count > 5 or config.CNT == 4:
+                config.COORDS_flag = False
+            if config.COORDS_flag:
+                if config.COORDS[0] != 9 and config.CNT == 0:
+                    x, y = config.COORDS[0] + 1, config.COORDS[1]
+                    config.CNT += 1
+                elif config.COORDS[0] != 0 and config.CNT == 1:
+                    x, y = config.COORDS[0] - 1, config.COORDS[1]
+                    config.CNT += 1
+                elif config.COORDS[1] != 9 and config.CNT == 2:
+                    x, y = config.COORDS[0], config.COORDS[1] + 1
+                    config.CNT += 1
+                elif config.COORDS[1] != 0 and config.CNT == 3:
+                    x, y = config.COORDS[0], config.COORDS[1] - 1
+                    config.CNT += 1
+                else:
+                    x, y = random.randint(0, 9), random.randint(0, 9)
+            else:
+                x, y = random.randint(0, 9), random.randint(0, 9)
+            if self.user_ships[x][y] != 3 and self.user_ships[x][y] != 2:
                 break
         if flag:
             if self.user_ships[x][y] == 0:
                 self.user_ships[x][y] = 3
+                config.COORDS_flag = False
             elif self.user_ships[x][y] == 1:
                 self.user_ships[x][y] = 2
                 self.check_ship_computer(x, y, self.user_ships)
-            if self.ship.check_ship(x, y)[0] == 0:
-                self.user_ships[x][y] = 3
-                self.check_ship_computer(x, y, self.user_ships)
+                config.COORDS_flag = True
+                config.CNT = 0
+                config.COORDS = [x, y]
             self.files.write('user_ships.txt', self.user_ships)
             config.TITLE_TEXT_1, config.TITLE_TEXT_2 = config.TITLE_TEXT_2, config.TITLE_TEXT_1
             screen.fill(config.SCREEN_COLOR, config.SIZE_TEXT)
@@ -418,7 +430,8 @@ class Play:
             ship_color[i + 1][j - 1] = 3
             ship_color[i - 1][j + 1] = 3
             ship_color[i - 1][j - 1] = 3
-
+            
+# обрабока хода
     def win(self):
         win_user = win_computer = True
         for elem in self.user_ships:
@@ -432,12 +445,21 @@ class Play:
     def move(self):
         self.board.board(self.left, self.top, self.cell_size, self.files.read('user_ships.txt'))
         self.board_game(self.left_2, self.top, self.cell_size)
-        if self.win()[0]:
-            return False, 'user'
-        if self.win()[1]:
-            return False, 'computer'
         pygame.display.update()
+        if self.win()[0]:
+            self.end('user')
+            return False
+        if self.win()[1]:
+            self.end('computer')
+            return False
         return True
+
+    def end(self, result):
+        config.SCORE = config.USER_COUNT
+        if result == 'user':
+            config.RESULT = 'win'
+        else:
+            config.RESULT = 'lose'
 
     def board_game(self, row, col, cell_size):
         self.ships = self.files.read('computer_ships_game.txt')
