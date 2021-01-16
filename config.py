@@ -40,10 +40,22 @@ If the player misses, he passes the move to the enemy, but if he
 wounded or killed the ship, he has the right to continue firing until
 the first miss. All actions are marked on the cell field.'''}
 
+TITLE_TEXT_1 = 'You go!'
+TITLE_TEXT_2 = 'Comp go!'
+TEXT_MOVE = 'comp move'
+SCREEN_COLOR = (191, 134, 48)
+SIZE_TEXT = (330, 60, 150, 70)
+TITLE_SIZE = (330, 60)
+HP = 1
 ship = []
-coef = 3
+coef = 7
 coeff = 5
 map_flag = True
 move_flag = True
 letters = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')
 USER_COUNT = 0
+COORDS = []
+COORDS_flag = False
+CNT = 0
+SCORE = 0
+RESULT = 0
