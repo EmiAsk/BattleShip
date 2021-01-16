@@ -7,6 +7,7 @@ from os import path
 
 from user_data_class import UserData
 
+
 def load_image(name):
     if not path.isfile(path.join(name)):
         print(f"ERROR 01: '{path.join(name)}' not found.")
@@ -46,8 +47,8 @@ class Login(UserData):
             config.USER_NAME = self.finally_name
             connect.close()
             from hashlib import sha512
-            password = sha512(self.finally_password.encode()).hexdigest()
-            if password != user_password:
+            #  password = sha512(self.finally_password.encode()).hexdigest()
+            if self.finally_name != user_password:
                 print('ERROR 02: Incorrect data entered.')
             else:
                 return True
@@ -68,4 +69,3 @@ def main():
             if event.type == pygame.KEYDOWN:
                 login.input_text(event)
             pygame.display.flip()
-    return

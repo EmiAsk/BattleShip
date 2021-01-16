@@ -62,12 +62,11 @@ class Greeting:
         self.button_exit.draw(500, 590, '< Exit >')
 
     def login(self):
-        login_main()
+        print(login_main())
         if login_main():
             main_menu()
 
     def signin(self):
-        signin_main()
         if signin_main():
             main_menu()
 

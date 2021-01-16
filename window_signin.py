@@ -52,7 +52,6 @@ class Signin(UserData):
             except AttributeError:
                 pass
             connect.close()
-            return True
 
 def main():
     global work
@@ -69,4 +68,4 @@ def main():
             if event.type == pygame.KEYDOWN:
                 signin.input_text(event)
             pygame.display.flip()
-    return
+    return True

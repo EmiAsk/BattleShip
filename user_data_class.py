@@ -14,12 +14,10 @@ class UserData:
         self.button_greeting = Button(230, 50)
         self.header_font = pygame.font.Font(config.FONT, 70)
         self.text_font = pygame.font.Font(config.FONT, 28)
-        self.text = self.header_font.render('Autohorization', True, [0, 0, 0])
-        screen.blit(self.text, (350, 40))
         pygame.display.flip()
 
-        self.finally_name = None
-        self.finally_password = None
+        self.finally_name = ''
+        self.finally_password = ''
         self.entered_name = ''
         self.entered_password = ''
         self.draw()
