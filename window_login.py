@@ -36,15 +36,15 @@ class Login(UserData):
             if self.password != user_password:
                 main_error()
             else:
-                global flag_menu
-                flag_menu = True
-                return
+                pygame.draw.rect(screen, (166, 120, 65), (755, 385, 40, 50), 0)
+                pygame.draw.lines(screen, 'green', False, ((755, 385), (765, 420), (785, 385)),
+                                  width=5)
 
     def to_greeting(self):
         self.work = False
 
 
-def main():
+if __name__ == '__main__':
     login = Login()
     login.buttons()
     login.work = True
@@ -58,3 +58,4 @@ def main():
             if event.type == pygame.KEYDOWN:
                 login.input_text(event)
         pygame.display.flip()
+

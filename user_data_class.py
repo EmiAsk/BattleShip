@@ -13,7 +13,7 @@ class UserData:
         self.work = True
         self.button_continue = Button(230, 50)
         self.button_greeting = Button(230, 50)
-        self.header_font = pygame.font.Font(config.FONT, 70)
+        self.header_font = pygame.font.Font(config.FONT, 38)
         self.text_font = pygame.font.Font(config.FONT, 28)
         pygame.display.flip()
 
@@ -31,26 +31,25 @@ class UserData:
         pygame.draw.rect(screen, (166, 120, 65), (30, 30, 840, 745), 0)
         pygame.draw.line(screen, 'black', (30, 150), (867, 150), 4)
 
-        pygame.draw.rect(screen, 'black', (200, 280, 500, 40), 1)
-        pygame.draw.rect(screen, 'black', (240, 380, 500, 40), 1)
+        pygame.draw.rect(screen, 'black', (200, 220, 500, 40), 1)
+        pygame.draw.rect(screen, 'black', (240, 320, 500, 40), 1)
 
         self.text_name = self.text_font.render('Name:', True, (0, 0, 0))
         self.text_password = self.text_font.render('Password:', True, (0, 0, 0))
 
-        screen.blit(self.text_name, (90, 280))
-        screen.blit(self.text_password, (90, 380))
+        screen.blit(self.text_name, (100, 220))
+        screen.blit(self.text_password, (100, 320))
 
         self.render_text(
-            'If you are already registered, enter your account details to \n\ncontinue. Do not forget to press the "continue" key',
-            60, 160, 22)
+            'Enter your account details to start the game', 60, 70, 110)
 
-        self.button_continue.draw(330, 450, '    < Continue >')
-        self.button_greeting.draw(330, 700, ' < Back to menu >')
+        self.button_continue.draw(330, 400, '< Start the game >')
+        self.button_greeting.draw(330, 490, ' < Back to menu >')
 
     def render_text(self, text, x, y, fsize):
         lines = text.split('\n')
         for i, line in enumerate(lines):
-            screen.blit(self.text_font.render(line, True, [0, 0, 0]), (x, y + fsize * i))
+            screen.blit(self.header_font.render(line, True, [0, 0, 0]), (x, y + fsize * i))
 
     def input_flag(self, event):
         self.flag_nickname = False
