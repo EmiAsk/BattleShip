@@ -131,12 +131,8 @@ class Ship:
     def buttons(self):
         color = 'white'
         x, y, width, height = 20, 550, 40, 40
-        pygame.draw.rect(screen, color, (x, y, width, height), width=1)
         pygame.draw.rect(screen, color, (self.x_btn, self.y_btn, self.width_btn, self.height_btn),
                          width=1)
-        font = pygame.font.Font(None, 60)
-        text = font.render('?', True, color)
-        screen.blit(text, (x + 10, y + 3))
         font = pygame.font.Font(None, 30)
         text = font.render('Save', True, color)
         screen.blit(text, (self.x_btn + 25, self.y_btn + 10))
