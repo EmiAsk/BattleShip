@@ -2,6 +2,7 @@ import pygame
 import config
 import sqlite3
 
+from class_for_buttons import Button
 from error import main as main_error
 from user_data_class import UserData
 from secondary_functions import load_image
@@ -16,6 +17,10 @@ pygame.display.flip()
 
 
 class Login(UserData):
+    def head(self):
+        self.render_text('Enter your account details to start the game', 60, 70, 110)
+        pygame.display.flip()
+
     def user_data(self):
         connect = sqlite3.connect('battleship.db')
         cursor = connect.cursor()
@@ -44,14 +49,16 @@ class Login(UserData):
         self.work = False
 
 
-if __name__ == '__main__':
+def main():
     login = Login()
-    login.buttons()
+    login.head()
     login.work = True
     while login.work:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 login.work = False
+            if event.type == pygame.MOUSEMOTION:
+                Button().move(event.pos[0], event.pos[1])
             if event.type == pygame.MOUSEBUTTONDOWN:
                 login.buttons()
                 login.input_flag(event)

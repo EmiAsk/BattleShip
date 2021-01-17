@@ -24,8 +24,8 @@ class UserData:
         self.draw()
 
     def buttons(self):
-        self.button_continue.press(330, 450, self.user_data)
-        self.button_greeting.press(330, 700, self.to_greeting)
+        self.button_continue.press(330, 400, self.user_data)
+        self.button_greeting.press(330, 500, self.to_greeting)
 
     def draw(self):
         pygame.draw.rect(screen, (166, 120, 65), (30, 30, 840, 745), 0)
@@ -40,9 +40,6 @@ class UserData:
         screen.blit(self.text_name, (100, 220))
         screen.blit(self.text_password, (100, 320))
 
-        self.render_text(
-            'Enter your account details to start the game', 60, 70, 110)
-
         self.button_continue.draw(330, 400, '< Start the game >')
         self.button_greeting.draw(330, 490, ' < Back to menu >')
 
@@ -55,10 +52,10 @@ class UserData:
         self.flag_nickname = False
         self.flag_password = False
 
-        if 200 <= event.pos[0] <= 700 and 280 <= event.pos[1] <= 320:
+        if 200 <= event.pos[0] <= 700 and 220 <= event.pos[1] <= 260:
             self.flag_nickname = True
             self.flag_password = False
-        elif 240 <= event.pos[0] <= 740 and 380 <= event.pos[1] <= 420:
+        elif 240 <= event.pos[0] <= 700 and 320 <= event.pos[1] <= 360:
             self.flag_nickname = False
             self.flag_password = True
 
@@ -66,24 +63,24 @@ class UserData:
         if self.flag_nickname:
             if event.key == pygame.K_BACKSPACE:
                 self.entered_name = self.entered_name[:-1]
-                pygame.draw.rect(screen, (166, 120, 65), (201, 281, 498, 38), 0)
+                pygame.draw.rect(screen, (166, 120, 65), (201, 221, 498, 38), 0)
             else:
                 if event.unicode != '':
                     if len(self.entered_name) < 15:
                         self.entered_name += event.unicode
             self.finally_name = self.entered_name
             self.nickname = self.text_font.render(self.entered_name, True, [0, 0, 0])
-            screen.blit(self.nickname, (210, 277))
+            screen.blit(self.nickname, (205, 220))
 
         if self.flag_password:
             if event.key == pygame.K_BACKSPACE:
                 self.entered_password = self.entered_password[:-1]
-                pygame.draw.rect(screen, (166, 120, 65), (241, 381, 498, 38), 0)
+                pygame.draw.rect(screen, (166, 120, 65), (241, 321, 498, 38), 0)
             else:
                 if event.unicode != '':
                     if len(self.entered_password) < 15:
                         self.entered_password += event.unicode
             self.finally_password = self.entered_password
             self.password = self.text_font.render(self.entered_password, True, [0, 0, 0])
-            screen.blit(self.password, (245, 380))
+            screen.blit(self.password, (245, 320))
         pygame.display.flip()
