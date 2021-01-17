@@ -2,7 +2,7 @@ import pygame
 import config
 
 from class_for_buttons import Button
-from secondary_functions import load_image
+from secondary_functions import load_image, load_music
 
 pygame.init()
 size = width, height = config.SIZE_WINDOW
@@ -94,6 +94,7 @@ class GameInfo:
 
 def main():
     gameinfo = GameInfo()
+    pygame.display.flip()
     while gameinfo.work:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -1,4 +1,5 @@
 SIZE_WINDOW = 900, 800
+SIZE_GAME = 800, 600
 IMAGE_BACKGROUND = 'additional_files/background.jpg'
 IMAGE_ICON = 'additional_files/icon.png'
 
@@ -43,7 +44,7 @@ the first miss. All actions are marked on the cell field.'''}
 TITLE_TEXT_1 = 'You go!'
 TITLE_TEXT_2 = 'Comp go!'
 TEXT_MOVE = 'comp move'
-SCREEN_COLOR = (191, 134, 48)
+SCREEN_COLOR = (166, 120, 65)
 SIZE_TEXT = (330, 60, 150, 70)
 TITLE_SIZE = (330, 60)
 HP = 1

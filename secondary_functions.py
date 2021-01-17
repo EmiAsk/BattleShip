@@ -18,6 +18,11 @@ def load_image(name):
         image = pygame.image.load(path.join(name))
         return image
 
+def load_music():
+    pygame.mixer.init()
+    music = pygame.mixer.Sound('additional_files/music.mp3')
+    pygame.mixer.Sound.play(music)
+
 def game_exit():
     coordinate_y = screen.get_height()
     while coordinate_y > 10:

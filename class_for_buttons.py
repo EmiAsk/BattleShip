@@ -35,7 +35,7 @@ class Button:
                 else:
                     return False
 
-    def draw(self, x, y, message, function=None):
+    def draw(self, x, y, message):
         pygame.draw.rect(screen, self.color, (x, y, self.width, self.heigth))
         pygame.draw.rect(screen, 'black', (x, y, self.width, self.heigth), 1)
         self.print_text(message, x + 20, y + 10)

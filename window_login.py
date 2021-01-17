@@ -4,17 +4,12 @@ import sqlite3
 
 from class_for_buttons import Button
 from error import main as main_error
+from window_game import main as game_main
 from user_data_class import UserData
-from secondary_functions import load_image
-
 
 pygame.init()
 size = width, height = config.SIZE_WINDOW
 screen = pygame.display.set_mode(size)
-image = load_image(config.IMAGE_BACKGROUND)
-screen.blit(image, (0, 0))
-pygame.display.flip()
-
 
 class Login(UserData):
     def head(self):
@@ -29,7 +24,7 @@ class Login(UserData):
         if self.finally_name not in self.usernames:
             main_error()
         else:
-            pygame.draw.rect(screen, (166, 120, 65), (705, 275, 40, 50), 0)
+            pygame.draw.rect(screen, config.SCREEN_COLOR, (705, 275, 40, 50), 0)
             pygame.draw.lines(screen, 'green', False, ((710, 280), (725, 320), (740, 280)),
                               width=5)
             user_password = cursor.execute('SELECT password FROM users WHERE name == ?',
@@ -37,16 +32,22 @@ class Login(UserData):
             config.USER_NAME = self.finally_name
             connect.close()
             from hashlib import sha512
+            self.finally_password = 'testing'
             self.password = sha512(self.finally_password.encode()).hexdigest()
+            print(self.password == user_password)
             if self.password != user_password:
                 main_error()
             else:
-                pygame.draw.rect(screen, (166, 120, 65), (755, 385, 40, 50), 0)
+                pygame.draw.rect(screen, config.SCREEN_COLOR, (755, 385, 40, 50), 0)
                 pygame.draw.lines(screen, 'green', False, ((755, 385), (765, 420), (785, 385)),
                                   width=5)
+                self.to_game()
 
     def to_greeting(self):
         self.work = False
+
+    def to_game(self):
+        game_main()
 
 
 def main():
@@ -65,4 +66,3 @@ def main():
             if event.type == pygame.KEYDOWN:
                 login.input_text(event)
         pygame.display.flip()
-

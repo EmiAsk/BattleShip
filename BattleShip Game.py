@@ -6,7 +6,7 @@ from class_for_buttons import Button
 from window_gameinfo import main as info_main
 from window_login import main as login_main
 from window_signin import main as signin_main
-from secondary_functions import load_image, game_exit
+from secondary_functions import load_image, load_music, game_exit
 
 pygame.init()
 size = width, height = config.SIZE_WINDOW
@@ -17,6 +17,8 @@ pygame.display.flip()
 
 
 class Greeting:
+    music = load_music()
+
     def __init__(self):
         self.work = True
         self.button_login = Button()
