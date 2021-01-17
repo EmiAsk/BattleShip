@@ -1,23 +1,12 @@
 import pygame
 import config
 
-from sys import exit
-from os import path
-from button_class import Button
+from class_for_buttons import Button
 
 from window_gameinfo import main as info_main
 from window_login import main as login_main
 from window_signin import main as signin_main
-from window_menu import main as main_menu
-
-
-def load_image(name):
-    if not path.isfile(path.join(name)):
-        print(f"ERROR 01: '{path.join(name)}' not found.")
-        exit()
-    image = pygame.image.load(path.join(name))
-    return image
-
+from secondary_functions import load_image, game_exit
 
 pygame.init()
 size = width, height = config.SIZE_WINDOW
@@ -29,6 +18,7 @@ pygame.display.flip()
 
 class Greeting:
     def __init__(self):
+        self.work = True
         self.button_login = Button()
         self.button_signin = Button()
         self.button_gameinfo = Button()
@@ -62,32 +52,32 @@ class Greeting:
         self.button_exit.draw(500, 590, '< Exit >')
 
     def login(self):
-        print(login_main())
-        if login_main():
-            main_menu()
+        login_main()
 
     def signin(self):
-        if signin_main():
-            main_menu()
+        signin_main()
 
     def gameinfo(self):
         info_main()
 
     def exit_game(self):
-        exit()
+        game_exit()
 
 
 def main():
-    work = True
     greeting = Greeting()
-    while work:
+    greeting.draw()
+    while greeting.work:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                work = False
+                game_exit()
+                greeting.work = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 greeting.press()
             if event.type == pygame.MOUSEMOTION:
                 greeting.move()
         greeting.draw()
         pygame.display.flip()
+
+
 main()

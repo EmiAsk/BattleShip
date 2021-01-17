@@ -1,19 +1,10 @@
 import pygame
-from sys import exit
 import config
 import sqlite3
 
-from os import path
-
+from error import main as main_error
 from user_data_class import UserData
-
-
-def load_image(name):
-    if not path.isfile(path.join(name)):
-        print(f"ERROR 01: '{path.join(name)}' not found.")
-        exit()
-    image = pygame.image.load(path.join(name))
-    return image
+from secondary_functions import load_image
 
 
 pygame.init()
@@ -22,7 +13,6 @@ screen = pygame.display.set_mode(size)
 image = load_image(config.IMAGE_BACKGROUND)
 screen.blit(image, (0, 0))
 pygame.display.flip()
-clock = pygame.time.Clock()
 
 
 class Login(UserData):
@@ -30,14 +20,9 @@ class Login(UserData):
         connect = sqlite3.connect('battleship.db')
         cursor = connect.cursor()
         self.usernames = cursor.execute('SELECT name FROM users').fetchall()
-        self.finally_name not in self.usernames
         self.usernames = [name[0] for name in self.usernames]
         if self.finally_name not in self.usernames:
-            print('ERROR 02: Incorrect data entered')
-            pygame.draw.rect(screen, (166, 120, 65), (705, 275, 40, 50), 0)
-            pygame.draw.line(screen, 'red', (710, 280), (740, 320), 5)
-            pygame.draw.line(screen, 'red', (740, 280), (710, 320), 5)
-
+            main_error()
         else:
             pygame.draw.rect(screen, (166, 120, 65), (705, 275, 40, 50), 0)
             pygame.draw.lines(screen, 'green', False, ((710, 280), (725, 320), (740, 280)),
@@ -47,25 +32,29 @@ class Login(UserData):
             config.USER_NAME = self.finally_name
             connect.close()
             from hashlib import sha512
-            #  password = sha512(self.finally_password.encode()).hexdigest()
-            if self.finally_name != user_password:
-                print('ERROR 02: Incorrect data entered.')
+            self.password = sha512(self.finally_password.encode()).hexdigest()
+            if self.password != user_password:
+                main_error()
             else:
-                return True
+                global flag_menu
+                flag_menu = True
+                return
+
+    def to_greeting(self):
+        self.work = False
 
 
 def main():
-    global work
-    work = True
     login = Login()
     login.buttons()
-    while work:
+    login.work = True
+    while login.work:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                work = False
+                login.work = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 login.buttons()
                 login.input_flag(event)
             if event.type == pygame.KEYDOWN:
                 login.input_text(event)
-            pygame.display.flip()
+        pygame.display.flip()

@@ -1,7 +1,9 @@
 SIZE_WINDOW = 900, 800
-IMAGE_BACKGROUND = 'background.jpg'
-FONT = 'font.ttf'
-BUTTON_SOUND = 'click_button.wav'
+IMAGE_BACKGROUND = 'additional_files/background.jpg'
+IMAGE_ICON = 'additional_files/icon.png'
+
+FONT = 'additional_files/font.ttf'
+BUTTON_SOUND = 'additional_files/click_button.wav'
 SILVER_COLOR = '#c0c0c0'
 DARK_SILVER_COLOR = '#a6a6a6'
 
@@ -15,15 +17,13 @@ LETTERS_GAME = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
 HEAD_INFO_GAME = ['Goal of the game', 'How to arrange ships?', 'How to walk?']
 TEXT_INFO_GAME = {'Goal of the game': '''The goal of the game is to defeat the enemy fleet by sinking all its ships.
 The cell field is designed to accommodate the flotilla.
-
 It consists of the following units:
     + 4 single-deck (1 cell);
     + 3 double-deck (2 cells);
     + 2 double-deck (3 cells);
     + 1 four-deck (4 cells).''', 'How to arrange ships?': '''Ships are placed so that they do not touch the side and angle.
-At the same time, they should stand horizontally or vertically, 
+At the same time, they should stand horizontally or vertically,
 but not diagonally.
-
 For the placement of ships, you can use the following tips:
 1) Place large ships in one part of the field, small ships in another:
 small ships the enemy will find it quickly, but it will take many
@@ -48,9 +48,14 @@ SIZE_TEXT = (330, 60, 150, 70)
 TITLE_SIZE = (330, 60)
 HP = 1
 ship = []
-coef = 3
+coef = 7
 coeff = 5
 map_flag = True
 move_flag = True
 letters = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')
 USER_COUNT = 0
+COORDS = []
+COORDS_flag = False
+CNT = 0
+SCORE = 0
+RESULT = 0

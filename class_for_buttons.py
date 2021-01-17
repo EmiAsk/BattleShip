@@ -5,6 +5,7 @@ pygame.init()
 size = width, height = config.SIZE_WINDOW
 screen = pygame.display.set_mode(size)
 
+
 class Button:
     pygame.init()
     button_sound = pygame.mixer.Sound(config.BUTTON_SOUND)
