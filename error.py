@@ -23,7 +23,7 @@ class ErrorForm(QMainWindow):
         self.button_ok.clicked.connect(self.close_form)
 
     def close_form(self):
-        sys.exit(0)
+        self.destroy()
 
 
 def main():
@@ -31,3 +31,7 @@ def main():
     form = ErrorForm()
     form.show()
     sys.exit(app.exec())
+
+
+if __name__ == '__main__':
+    main()
