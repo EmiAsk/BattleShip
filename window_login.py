@@ -21,7 +21,7 @@ class Login(UserData):
         cursor = connect.cursor()
         self.usernames = cursor.execute('SELECT name FROM users').fetchall()
         self.usernames = [name[0] for name in self.usernames]
-        if self.finally_name not in self.usernames:
+        if self.finally_name not in self.usernames or self.finally_name == '':
             main_error()
         else:
             pygame.draw.rect(screen, config.SCREEN_COLOR, (705, 275, 40, 50), 0)
@@ -32,9 +32,7 @@ class Login(UserData):
             config.USER_NAME = self.finally_name
             connect.close()
             from hashlib import sha512
-            self.finally_password = 'testing'
             self.password = sha512(self.finally_password.encode()).hexdigest()
-            print(self.password == user_password)
             if self.password != user_password:
                 main_error()
             else:

@@ -56,7 +56,6 @@ class Signin(UserData):
     def to_game(self):
         game_main()
 
-
 def main():
     signin = Signin()
     signin.head()

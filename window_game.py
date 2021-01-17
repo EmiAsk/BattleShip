@@ -5,8 +5,7 @@ import config
 import sqlite3
 
 from error import ErrorForm
-from window_end import main as end_game_main
-
+from window_end import main as end_game
 
 screen = pygame.display.set_mode(config.SIZE_GAME)
 screen.fill(config.SCREEN_COLOR)
@@ -530,14 +529,14 @@ class Play:
         cur.execute(
             f'UPDATE users SET all_games = "{all_games}" WHERE name == "{config.USER_NAME}"')
         cur.execute(f'UPDATE users SET wins = "{wins}" WHERE name == "{config.USER_NAME}"')
-        cur.execute(f'UPDATE users SET lose = "{lose}" WHERE name == "{config.USER_NAME}"')
+        cur.execute(f'UPDATE users SET lose = "{lose[0]}" WHERE name == "{config.USER_NAME}"')
         if config.SCORE > score:
             cur.execute(
                 f'UPDATE users SET score = "{config.SCORE}" WHERE name == "{config.USER_NAME}"')
 
         con.commit()
         con.close()
-
+        end_game()
 
 def main():
     ship = Ship()
@@ -581,4 +580,3 @@ def main():
                         if play.move_computer(x_mouse, y_mouse):
                             config.move_flag = True
                     game = play.move()
-    end_game_main()
